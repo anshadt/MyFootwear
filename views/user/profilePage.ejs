@@ -1,0 +1,884 @@
+<%- include('../../views/partials/userHeader') %>
+<link rel="stylesheet" href="/css/ar.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      padding-top: 80px;
+     
+    }
+    .sidebar {
+      height: 100vh;
+      background-color: #2c3e50;
+      position: fixed;
+      padding-top: 5rem;
+    }
+    .sidebar a {
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+    .sidebar a:hover {
+      background-color: #34495e;
+    }
+    .profile-header {
+      background-color: #00bcd4; /* Teal 300 */
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .profile-pic {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 5px solid white;
+      transition: transform 0.3s;
+    }
+    .profile-pic:hover {
+      transform: scale(1.1);
+    }
+    .profile-card {
+      margin-top: 20px;
+      z-index: 1;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .address-card {
+      background: #f1f1f1;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 10px;
+      position: relative;
+      transition: background 0.3s;
+    }
+    .address-card:hover {
+      background: #e1e1e1;
+    }
+
+    .dropdown-menu {
+  padding: 0;
+  margin: 0;
+}
+
+.profile-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  padding: 8px 16px;
+  transition: background-color 0.2s ease; 
+}
+
+.profile-link:hover {
+  background-color: #f0f0f0; 
+}
+
+.profile-avatar {
+  width: 24px; 
+  height: 24px;
+  border-radius: 50%; 
+  margin-right: 8px; 
+}
+
+.logout-link {
+  margin-bottom: 8px; 
+}
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; 
+}
+
+.content-section {
+  margin-top: 20px; 
+}
+
+.breadcrumb {
+            background-color: #f8f9fa; 
+            border-radius: 0.375rem;
+            padding: 0.75rem 1rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); 
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: ">";
+            color: #6c757d;
+        }
+
+        .breadcrumb-item a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .breadcrumb-item a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb-item.active {
+            color: #6c757d; 
+        }
+
+        .copy-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #007bff; /* Customize color */
+        font-size: 1.2em;
+        margin-left: 8px;
+    }
+
+    .copy-button:hover {
+        color: #0056b3; /* Customize hover color */
+    }
+  </style>
+  <header class="header_section bg-dark fixed-header">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg custom_nav-container">
+        <a class="navbar-brand" href="/userHomePage">
+          <span>
+            Footwear
+          </span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+          <span class=""> </span>
+        </button>
+  
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mx-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/userHomePage">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About us</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact us</a>
+            </li>
+          </ul>
+  
+          <!-- User Profile and Cart Section -->
+          <div class="user_option">
+            <a class="cart_link position-relative" href="/getCartPage">
+              <!-- Cart Icon SVG -->
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 456.029 456.029" width="50" height="50">
+                <path d="M345.6 338.862c-29.184 0-53.248 23.552-53.248 53.248s23.552 53.248 53.248 53.248 53.248-23.552 53.248-53.248-23.552-53.248-53.248-53.248zM439.296 84.91h-330.56l-5.12-34.304c-2.048-13.824-21.504-30.72-44.544-30.72H20.48C9.216 19.886 0 29.102 0 40.366S9.216 60.846 20.48 60.846h41.472c2.56 0 4.608 2.048 5.12 4.608l31.744 216.064c4.096 27.136 27.648 47.616 55.296 47.616h212.992c26.624 0 49.664-18.944 55.296-45.056l33.28-166.4c4.096-21.504-3.072-32.256-14.336-34.304zM215.04 389.55c-1.024-28.16-24.576-50.688-52.736-50.688-29.696 1.536-52.224 26.112-51.2 55.296 1.024 28.16 24.064 50.688 52.224 50.688 29.184 0 52.224-24.576 51.712-55.296z"/>
+              </svg>
+              <!-- Cart Count Badge -->
+              <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <%= cartCount %>
+              </span>
+            </a>
+            <a class="cart_link position-relative" href="/wishlist">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="50" height="50" fill="red">
+                <path d="M462.3 62.7C407 7.4 324.8 23.9 270.1 79.1L256 93.3l-14.1-14.2c-54.8-55.2-136.9-71.7-192.2-16.4S-7.4 199.9 48 255.2L239 445.5c7.4 7.5 19.6 7.5 27 0l205.4-205.4c55.2-54.8 71.7-136.9 16.4-192.2z"/>
+              </svg>
+              <span data-toggle="tooltip" data-placement="bottom" title="<%= wishlistCount %>" id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <%= wishlistCount %>
+              </span>
+            </a>
+            <p class="user_proname"><%= user.name %></p>
+  
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="loginDropdown" data-toggle="dropdown">
+                <i class="fa fa-user" aria-hidden="true"></i>
+              </button>
+  
+              <div class="dropdown-menu">
+                <a href="/profilePage" class="profile-link">
+                  <img src="/images/profile.png" class="profile-avatar"> Profile
+                </a>
+                <a href="/orderHistory" class="profile-link">
+                  <img src="/images/purchase-order.png" class="profile-avatar"> Orders
+                </a>
+                <a href="/getCartPage" class="profile-link">
+                  <img src="/images/shopping-cart (1).png" class="profile-avatar"> Cart
+                </a>
+                <a href="wishlist" class="profile-link">
+                  <img src="/images/wishlist.png" class="profile-avatar"> Wishlist
+                </a>
+                <a href="/loadWalletPage" class="profile-link">
+                  <img src="/images/wallet.png" class="profile-avatar"> Wallet
+                </a>
+                <a href="/logout" class="profile-link logout-link">
+                  <img src="/images/shutdown.png" class="profile-avatar"> Logout
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+  <div class="container mt-5">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/userHomePage">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">User Profile</li>
+      </ol>
+  </nav>  
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Main Content -->
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-4">
+        <div class="container">
+          <div class="profile-card">
+            <div class="text-center mt-4">
+              <img src="/images/profile.png" alt="Profile Picture" class="profile-pic img-fluid">
+              <h4 class="mt-3"><%= user.name %></h4>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Email:</strong><%= user.email %></li>
+              </ul>
+              <p>Referral Code: <span id="referralCode"><%= user.referralCode %></span>
+                <button onclick="copyReferralCode()" class="copy-button">
+                    <i class="fa fa-copy" aria-hidden="true"></i> <!-- Copy icon -->
+                </button>
+            </p>
+            <p id="copyMessage" style="display: none; color: green;">Copied!</p>
+            </div>
+          </div>
+        </div>
+        <!-- Addresses Section -->
+        <div class="container mt-4">
+          <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+            Add New Address
+          </button>
+          <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#changepasswordModal">
+            Change Password
+          </button>
+           <button type="button" class="btn btn-primary mb-3" id="editProfilebtn" data-bs-toggle="modal" data-bs-target="#editProfileModal"
+          data-user-id="<%= user._id %>"
+          data-user-name="<%= user.name %>"
+          data-user-email="<%= user.email %>">
+          Edit Profile
+          </button>
+
+          <h4 class="text-center">Addresses</h4>
+          <!-- Addresses List -->
+          <div id="addresses">
+              <% address.forEach(addr => { %>
+            <div class="address-card">
+              <h6 class="card-title"><%= addr.fullName %></h6>
+              <p class="card-text"><%= addr.streetAddress %> <br>
+                <%= addr.phone %> <br>
+                <%= addr.country %> <br>
+                <%= addr.state %> <br>
+                <%= addr.city %> <br>
+                <%= addr.zipCode %> <br></p>
+              <div class="text-end">
+                <button class="btn btn-warning btn-sm editbtn" id="editbtn" data-bs-toggle="modal" data-bs-target="#editAddressModal"
+                data-address-Id=" <%= addr._id %>"
+                data-address-fullName=" <%= addr.fullName %>"
+                data-address-streetAddress=" <%= addr.streetAddress %>"
+                data-address-phone=" <%= addr.phone %>"
+                data-address-state=" <%= addr.state %>"
+                data-address-city=" <%= addr.city %>"
+                data-address-country=" <%= addr.country %>"
+                data-address-zipCode=" <%= addr.zipCode %>"
+                >Edit</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteAddress(this, '<%= addr._id %>')">Delete</button>
+              </div>
+            </div>
+            <% }) %>
+          </div>
+        </div>
+
+        <!-- Edit Profile Modal -->
+        <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="editProfileForm">
+                  <input type="hidden" id="edituserId" name="userId">
+                  <div class="mb-3">
+                    <label for="editUserName" class="form-label">User Name</label>
+                    <input type="text" class="form-control" id="editUserName" name="editUserName">
+                  </div>
+                  <div class="mb-3">
+                    <label for="editEmail" class="form-label">Email</label>
+                    <input type="email" class="form-control" readonly id="editEmail" name="editEmail">
+                  </div>
+                  <button type="button" class="btn btn-primary w-100" onclick="editProfile()">Save Changes</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Address Modal -->
+        <div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="addAddressModalLabel">Add New Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="mb-3">
+                    <label for="FullName" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="Enter your name">
+                  </div>
+                  <div class="mb-3">
+                    <label for="StreetAddress" class="form-label">Street Address</label>
+                    <input type="text" class="form-control" id="address" placeholder="Enter your address">
+                  </div>
+                  <div class="mb-3">
+                    <label for="PhoneNumber" class="form-label">Phone Number</label>
+                    <input type="text" class="form-control" id="phoneNumber" placeholder="Enter your Phone Number">
+                  </div>
+                  <div class="mb-3">
+                    <label for="City" class="form-label">City</label>
+                    <input type="text" class="form-control" id="city" placeholder="Enter your city">
+                  </div>
+                  <div class="mb-3">
+                    <label for="State" class="form-label">State</label>
+                    <input type="text" class="form-control" id="state" placeholder="Enter your state">
+                  </div>
+                  <div class="mb-3">
+                    <label for="Country" class="form-label">Country</label>
+                    <input type="text" class="form-control" id="country" placeholder="Enter your country">
+                  </div>
+                  <div class="mb-3">
+                    <label for="ZipCode" class="form-label">Zip Code/Pincode</label>
+                    <input type="text" class="form-control" id="zipCode" placeholder="Enter your zipCode">
+                  </div>
+                  <button type="button" class="btn btn-primary w-100" onclick="addAddress()">Add Address</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit Address Modal -->
+        <div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="editAddressModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="editAddressModalLabel">Edit Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="editAddressForm">
+                  <input type="hidden" id="editAddressId" name="addressId">
+                  <div class="mb-3">
+                    <label for="fullName" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="editAddressName" name="fullName" placeholder="Enter your Name">
+                  </div>
+                  <div class="mb-3">
+                    <label for="streetAddress" class="form-label">StreetAddress</label>
+                    <input type="text" class="form-control" id="editStreetAddress" name="streetAddress" placeholder="Enter your address">
+                  </div>
+                  <div class="mb-3">
+                    <label for="Phone" class="form-label">Phone</label>
+                    <input type="number" class="form-control" id="editAddressPhone" name="Phone" placeholder="Enter your phone">
+                  </div>
+                  <div class="mb-3">
+                    <label for="country" class="form-label">Country</label>
+                    <input type="text" class="form-control" id="editAddressCountry" name="country" placeholder="Enter your country">
+                  </div>
+                  <div class="mb-3">
+                    <label for="city" class="form-label">City</label>
+                    <input type="text" class="form-control" id="editAddressCity" name="city" placeholder="Enter your city">
+                  </div>
+                  <div class="mb-3">
+                    <label for="state" class="form-label">State</label>
+                    <input type="text" class="form-control" id="editAddressState" name="state" placeholder="Enter your address">
+                  </div>
+                  <div class="mb-3">
+                    <label for="zipCode" class="form-label">Zip Code</label>
+                    <input type="number" class="form-control" id="editAddressZipCode" name="zipCode" placeholder="Enter your address">
+                  </div>
+                  <button type="button" class="btn btn-primary w-100" onclick="editAddress()">Save Changes</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div class="modal fade" id="changepasswordModal" tabindex="-1" aria-labelledby="changepasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="changepasswordModalLabel">Change Password</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label for="oldpassword" class="form-label">Current Password</label>
+              <input type="password" class="form-control" id="currentpassword" placeholder="Enter Your Current Password">
+            </div>
+            <div class="mb-3">
+              <label for="newpassword" class="form-label">New Password</label>
+              <input type="password" class="form-control" id="newpassword" placeholder="Enter Your New Password">
+            </div>
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">Re-Enter Password</label>
+              <input type="password" class="form-control" id="confirmpassword" placeholder="Re-Enter Your New Password">
+            </div>
+            <button type="button" class="btn btn-primary w-100" onclick="editChangePassword()">Save Password</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Add Address ............/
+    async function addAddress() {
+    const fullName = document.getElementById('name').value.trim();
+    const streetAddress = document.getElementById('address').value.trim();
+    const phone = document.getElementById('phoneNumber').value.trim();
+    const city = document.getElementById('city').value.trim();
+    const zipCode = document.getElementById('zipCode').value.trim();  
+    const state = document.getElementById('state').value.trim();
+    const country = document.getElementById('country').value.trim();
+    const phonePattern = /^(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/;
+    
+
+    if (!fullName || !streetAddress || !phone || !city || !zipCode || !state || !country) {
+        Swal.fire({
+            title: "Error",
+            text: "All fields must be filled",
+            icon: "error",
+            confirmButtonText: "Okay"
+        });
+        return;
+    }
+    if (streetAddress.trim().split(/\s+/).length > 30) {
+        Swal.fire({
+            title: 'Error',
+            text: "Only 30 words allowed for street address",
+            icon: "error",
+            confirmButtonText: "Okay"
+        });
+        return;
+    }
+    if (!phonePattern.test(phone)) {
+        Swal.fire({
+            title: 'Error',
+            text: "Invalid phone number format",
+            icon: "error",
+            confirmButtonText: "Okay"
+        });
+        return;
+    }
+    if (zipCode.length != 6 || /\s/.test(zipCode)) {
+        Swal.fire({
+            title: 'Error',
+            text: "Zip code must be at least 6 characters and contain no spaces",
+            icon: "error"
+        });
+        return;
+    }
+    if (phone.length != 10 || /\s/.test(phone)) {
+        Swal.fire({
+            title: 'Error',
+            text: "Phone Number must be exactly 10 digits and contain no spaces",
+            icon: "error"
+        });
+        return;
+    }
+
+    try {
+        const response = await fetch('/addAddress', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ fullName, streetAddress, phone, city, zipCode, state, country })
+        });
+
+        if (response.ok) {
+            Swal.fire({
+                title: 'Address Added!',
+                text: 'The new address was added successfully.',
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false
+            }).then(() => {
+                location.reload();
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Failed!',
+                text: 'Failed to add the address. Please try again.',
+            });
+        }
+    } catch (error) {
+        console.error('Error while adding address', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'An unexpected error occurred while adding the address.',
+        });
+    }
+}
+
+//Edit Address
+document.addEventListener('DOMContentLoaded', () => {
+  const editButtons = document.querySelectorAll('.editbtn')
+  editButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const editName = button.getAttribute('data-address-fullName')
+      const editAddress = button.getAttribute('data-address-streetAddress')
+      const phone = parseInt(button.getAttribute('data-address-phone'))
+      const state = button.getAttribute('data-address-state')
+      const city = button.getAttribute('data-address-city')
+      const country = button.getAttribute('data-address-country')
+      const zipCode = parseInt(button.getAttribute('data-address-zipCode')) 
+      const addressId = button.getAttribute('data-address-Id').trim() 
+
+      document.getElementById('editAddressId').value = addressId;
+      document.getElementById('editAddressName').value = editName;
+      document.getElementById('editStreetAddress').value = editAddress;
+      document.getElementById('editAddressPhone').value = phone;
+      document.getElementById('editAddressCountry').value = country;
+      document.getElementById('editAddressCity').value = city;
+      document.getElementById('editAddressState').value = state;
+      document.getElementById('editAddressZipCode').value = zipCode;
+    }) 
+  });
+})
+
+// Edit Address
+async function editAddress() {
+  const form = document.getElementById('editAddressForm');
+  const addressId = form.editAddressId.value;
+  const fullName = form.editAddressName.value.trim();
+  const streetAddress = form.editStreetAddress.value.trim();
+  const phone = form.editAddressPhone.value.trim();
+  const country = form.editAddressCountry.value.trim();
+  const city = form.editAddressCity.value.trim();
+  const state = form.editAddressState.value.trim();
+  const zipCode = form.editAddressZipCode.value.trim();
+
+  // Validation
+  if (!fullName || !streetAddress || !phone || !country || !city || !state || !zipCode) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Validation Error',
+      text: 'All fields are required.',
+      confirmButtonText: 'OK'
+    });
+    return;
+  }
+
+  // Phone number validation
+  const phonePattern = /^(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/;
+  if (!phonePattern.test(phone)) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Phone Number',
+      text: 'Please enter a valid phone number.',
+      confirmButtonText: 'OK'
+    });
+    return;
+  }
+
+  if (zipCode.length !== 6 || !/^\d+$/.test(zipCode)) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Zip Code',
+      text: 'Zip code must be 6 digits.',
+      confirmButtonText: 'OK'
+    });
+    return;
+  }
+
+  try {
+    const response = await fetch('/editAddress', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        addressId,
+        fullName,
+        streetAddress,
+        phone,
+        city,
+        zipCode,
+        state,
+        country
+      })
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Address Updated',
+        text: result.message || 'The address has been successfully updated.',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        location.reload();
+      });
+    } else {
+      throw new Error(result.message || `Failed to update address. Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error updating address:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Update Failed',
+      text: `Error: ${error.message}. Please try again later.`,
+      confirmButtonText: 'OK'
+    });
+  }
+}
+
+//Delete Address
+function deleteAddress(button, addressId) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to undo this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`/deleteAddress/${addressId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            Swal.fire(
+              'Deleted!',
+              'Your address has been deleted.',
+              'success'
+            );
+            const addressCard = button.closest('.address-card');
+            addressCard.remove();
+          } else {
+            Swal.fire(
+              'Error!',
+              'Failed to delete the address.',
+              'error'
+            );
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          Swal.fire(
+            'Error!',
+            'Something went wrong while deleting the address.',
+            'error'
+          );
+        });
+      }
+    });
+  }
+
+  //Change Password
+  async function editChangePassword() {
+    const currentPassword = document.getElementById('currentpassword').value.trim();
+    const newPassword = document.getElementById('newpassword').value.trim();
+    const confirmPassword = document.getElementById('confirmpassword').value.trim();
+
+    if (!currentPassword) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Validation Error',
+            text: 'Current password field is required.',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+
+    if (currentPassword.length < 6 || /\s/.test(currentPassword)) {
+        Swal.fire({
+            title: 'Error',
+            text: "Current password must be at least 6 characters and contain no spaces.",
+            icon: "error"
+        });
+        return;
+    }
+
+    if (!newPassword) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Validation Error',
+            text: 'New password field is required.',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+
+    if (newPassword.length < 6 || /\s/.test(newPassword)) {
+        Swal.fire({
+            title: 'Error',
+            text: "New password must be at least 6 characters and contain no spaces.",
+            icon: "error"
+        });
+        return;
+    }
+
+    if (!confirmPassword) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Validation Error',
+            text: 'Confirm password field is required.',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+
+    if (newPassword !== confirmPassword) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Validation Error',
+            text: 'New password and confirm password do not match.',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+
+    try {
+      const response = await fetch('/changepassword', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({currentPassword,newPassword})
+        });
+        if (response.status === 200) {
+            Swal.fire({
+                title: 'Success!',
+                text: 'Your password has been changed successfully.',
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false
+            }).then(() => {
+                location.reload();  
+            });
+        } else {
+          const data = await response.json(); 
+            Swal.fire({
+                icon: 'error',
+                title: 'Failed!',
+                text: data.message || 'Failed to change the password. Please try again.',
+             
+            });
+        }
+    } catch (error) {
+        console.error('Error while changing password', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'An unexpected error occurred while changing the password.',
+        });
+    }
+    
+}
+
+</script>
+
+<script>
+// Edit Profile JavaScript
+document.getElementById('editProfilebtn').addEventListener('click', function() {
+  const userId = this.getAttribute('data-user-id');
+  const userName = this.getAttribute('data-user-name');
+  const userEmail = this.getAttribute('data-user-email');
+
+  document.getElementById('edituserId').value = userId;
+  document.getElementById('editUserName').value = userName;
+  document.getElementById('editEmail').value = userEmail;
+});
+
+// Edit Profile Function
+async function editProfile() {
+  const form = document.getElementById('editProfileForm');
+  const userId = form.userId.value;
+  const editUserName = form.editUserName.value.trim();
+
+  if (!editUserName) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Validation Error',
+      text: 'User Name field is required.',
+      confirmButtonText: 'OK'
+    });
+    return;
+  }
+
+  try {
+    const response = await fetch('/editProfile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ userId, editUserName })
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Profile Updated',
+        text: result.message || 'Your profile has been successfully updated.',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        location.reload();
+      });
+    } else {
+      throw new Error(result.message || `Failed to update profile. Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Update Failed',
+      text: `Error: ${error.message}. Please try again later.`,
+      confirmButtonText: 'OK'
+    });
+  }
+}
+
+
+</script>
+
+  </script>
+  <script>
+    function copyReferralCode() {
+        // Get the referral code text
+        const referralCode = document.getElementById("referralCode").innerText;
+
+        // Copy to clipboard
+        navigator.clipboard.writeText(referralCode).then(() => {
+            // Show copied message
+            const copyMessage = document.getElementById("copyMessage");
+            copyMessage.style.display = "inline";
+
+            // Hide the message after 2 seconds
+            setTimeout(() => {
+                copyMessage.style.display = "none";
+            }, 2000);
+        }).catch(err => {
+            console.error("Error copying referral code: ", err);
+        });
+    }
+</script>
+
+
+
+
+  <%- include('../../views/partials/userFooter') %>

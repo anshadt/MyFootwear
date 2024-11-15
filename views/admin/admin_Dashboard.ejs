@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+        <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title><%- title %></title>
+                <link rel="shortcut icon" href="/images/iconshoe.jpg" type="">
+                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+                <style>
+                    .sidebar {
+                        height: 100vh;
+                        background-color: #ffbe33;
+                        color: #fff;
+                        padding-top: 1rem;
+                    }
+
+                    .sidebar a {
+                        color: #fff;
+                        text-decoration: none;
+                    }
+
+                    .sidebar a:hover {
+                        background-color: #071553;
+                    }
+
+                    .content {
+                        padding: 2rem;
+                    }
+
+                    .navbar {
+                        margin-bottom: 0;
+                    }
+
+                    #couponDetails {
+                        display: none;
+                    }
+
+                    .date-range {
+                        display: none;
+                    }
+                </style>
+               </head>
+
+               <body>
+                <!-- Navbar -->
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div class="collapse navbar-collapse justify-content-end">
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-user"></i> Admin
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <a class="dropdown-item" href="/admin/logout" id="logoutBtn">Logout</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+
+                 <div class="container-fluid">
+                    <div class="row">
+                        <!-- Sidebar -->
+                        <nav class="col-md-2 sidebar">
+                            <ul class="nav flex-column">
+                                <li class="nav-item"><a class="nav-link active" href="/admin/loadAdminDash"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/admin/loaduserMng"><i class="fas fa-users"></i> Users</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/admin/loadProuctPage"><i class="fas fa-box"></i> Products</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/admin/loardOrderMng"> <i class="fas fa-shopping-cart"></i> Orders</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/admin/categoryPage"><i class="fas fa-sliders-h"></i> Category</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/admin/loadCouponPage"><i class="fas fa-tag"></i> Coupon</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/admin/offer"><i class="fas fa-tags"></i> Offer</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/admin/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                            </ul>
+                        </nav>
+                        <!-- Main Content -->
+                        <main role="main" class="col-md-10 content">
+                           <div class="container">
+                           <h1 class="text-center">Admin Dashboard</h1>
+                            <div class="row">
+                             <!-- Sales Report Section -->
+                            <div class="col-md-12 mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    Sales Report
+                                </div>
+                                <div class="card-body">
+                                    <form id="salesReportForm">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-2">
+                                                <label for="startDate">Start Date</label>
+                                                <input type="date" class="form-control" id="startDate" name="startDate" required>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label for="endDate">End Date</label>
+                                                <input type="date" class="form-control" id="endDate" name="endDate" required>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label for="reportType">Report Type</label>
+                                                <select class="form-control" id="reportType" name="reportType">
+                                                    <option value="json">View Online</option>
+                                                    <option value="pdf">Download PDF</option>
+                                                    <option value="excel">Download Excel</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label>&nbsp;</label>
+                                                <button type="submit" class="btn btn-primary btn-block">Generate Report</button>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="dateRangeSelect">Quick Select</label>
+                                                <select id="dateRangeSelect" class="form-control" onchange="setDateRange(this.value)">
+                                                    <option value="">Select Date Range</option>
+                                                    <option value="today">Today</option>
+                                                    <option value="thisWeek">This Week</option>
+                                                    <option value="thisMonth">This Month</option>
+                                                    <option value="thisYear">This Year</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div id="reportResults" class="mt-4"></div>
+                                </div>
+                            </div>
+                            </div>
+
+                            <!-- Sales Overview Chart -->
+                            <div class="col-md-12">
+                             <div class="card">
+                                <div class="card-header">
+                                    Sales Overview
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="salesChart"></canvas>
+                                </div>
+                            </div>
+                           </div>
+
+                               <!-- Recent Orders Start -->
+                            <div class="col-md-12 mt-5">
+                                <div class="card">
+                                    <div class="card-header">
+                                      Recent Orders
+                                    </div>
+                                    <div class="card-body">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Order ID</th>
+                                                <th>Date</th>
+                                                <th>Status</th>
+                                              </tr>
+                                        </thead>
+                                            <tbody>
+                                                <% if(orders.length != 0) { %>
+                                                <% orders.forEach((order, index) => { %>
+                                                <tr>
+                                                    <td><%= index + 1 %></td> 
+                                                    <td><%= order.orderId %></td>
+                                                    <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
+                                                    <td><%= order.orderStatus || 'Pending' %></td> 
+                                                </tr>
+                                                <% }) %>
+                                                <% } else { %>
+                                                <tr>
+                                                    <td colspan="4" class="text-center">No recent orders found</td>
+                                                </tr>
+                                                <% } %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                            </div>
+                            <!-- Recent Orders End -->
+
+                            <!-- Best Selling product Section Start -->
+                                <div class="container mt-5">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    Best Selling product 
+                                                </div>
+                                                <div class="card-body">
+                                                    <table class="table">
+                                                        <tbody>
+                                                            <% if(orders.length != 0) { %>
+                                                            <% orders.forEach((order, index) => { %>
+                                                            <tr>
+                                                                <td><%= index + 1 %></td>
+                                                                <td><%= order.orderId %></td>
+                                                            </tr>
+                                                            <% }) %>
+                                                            <% } else { %>
+                                                            <tr>
+                                                                <td colspan="4" class="text-center">No recent orders found</td>
+                                                            </tr>
+                                                            <% } %>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Best Selling product Section End -->
+
+                                        <!-- Best Selling Category Section Start -->
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    Best Selling Category
+                                                </div>
+                                                <div class="card-body">
+                                                    <table class="table">
+                                                        <tbody>
+                                                            <% if(orders.length != 0) { %>
+                                                            <% orders.forEach((order, index) => { %>
+                                                            <tr>
+                                                                <td><%= index + 1 %></td> 
+                                                                <td><%= order.orderId %></td>
+                                                            </tr>
+                                                            <% }) %>
+                                                            <% } else { %>
+                                                            <tr>
+                                                                <td colspan="4" class="text-center">No recent orders found</td>
+                                                            </tr>
+                                                            <% } %>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Best Selling Category Section End -->
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let orderChart;
+        const allMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        function initChart() {
+          var ctx = document.getElementById('salesChart').getContext('2d');
+          orderChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: allMonths,  
+              datasets: [{
+                label: 'Order Count',
+                data: Array(12).fill(0), 
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: 'Number of Orders'
+                  }
+                }
+              },
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'Order Count Per Month'
+                }
+              }
+            }
+          });
+        }
+      
+        // Update chart with data
+        function updateChart(data) {
+          // Create a map of month names to order counts
+          const monthOrderMap = new Map(data.map(item => [item.month, item.orderCount]));
+      
+          // Fill the order counts according to the full month list
+          const updatedOrderCounts = allMonths.map(month => monthOrderMap.get(month) || 0);
+      
+          // Update the chart with the new order counts
+          orderChart.data.datasets[0].data = updatedOrderCounts;
+          orderChart.update();
+        }
+      
+        // Fetch order data from backend API
+        function fetchOrderData() {
+          fetch('/admin/reports/api/sales-data')
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              return response.json();
+            })
+            .then(data => {
+             
+              updateChart(data);  // Update the chart with new data
+            })
+            .catch(error => {
+              console.error('Error fetching order data:', error);
+              // Display an error message to the user
+              document.getElementById('salesChart').innerHTML = 'Error loading chart data. Please try again later.';
+            });
+        }
+      
+        // Initialize the chart when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+          initChart();
+          fetchOrderData();
+        });
+      </script>
+      
+      <!-- Sales Report Script -->
+      <script>
+      
+      
+      document.getElementById('salesReportForm').addEventListener('submit', function(e) {
+          e.preventDefault();
+      
+          
+          const formData = new URLSearchParams(new FormData(this)).toString();
+          const reportType = new FormData(this).get('reportType');
+      
+          fetch('/admin/generateSalesReport', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+              },
+              body: formData
+          })
+          .then(response => {
+              if (reportType === 'json') {
+                  return response.json();
+              } else {
+                  return response.blob();
+              }
+          })
+          .then(data => {
+              if (reportType === 'json') {
+                  displayReportResults(data);
+              } else {
+                  downloadReport(data, reportType);
+              }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+              alert('An error occurred while generating the report.');
+          });
+      });
+      
+      
+      
+      function displayReportResults(data) {
+        
+          
+          // Create a table to display the report data
+          const table = document.createElement('table');
+          table.className = 'table table-bordered';
+          table.innerHTML = `
+              <thead>
+                  <tr>
+                      <th>Metric</th>
+                      <th>Value</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr><td>Total Orders</td><td>${data.totalOrders || 0}</td></tr>
+                  <tr><td>Original Total</td><td>${(data.originalTotal || 0).toFixed(2)}</td></tr>
+                  <tr><td>Offer Discount</td><td>${(data.offerDiscount || 0).toFixed(2)}</td></tr>
+                  <tr><td>Total After Offers</td><td>${(data.afterOfferTotal || 0).toFixed(2)}</td></tr>
+                  <tr><td>Coupon Discount</td><td>${(data.totalCouponDiscount || 0).toFixed(2)}</td></tr>
+                  <tr><td>Final Total</td><td>${(data.finalTotal || 0).toFixed(2)}</td></tr>
+              </tbody>
+          `;
+      
+          // Clear previous results and append the new table
+          const resultsContainer = document.getElementById('reportResults');
+          if (resultsContainer) {
+              resultsContainer.innerHTML = '';
+              resultsContainer.appendChild(table);
+          } else {
+              console.error('Element with id "reportResults" not found in the DOM');
+          }
+      }
+      
+      function updateRecentOrdersTable(recentOrders) {
+          const tableBody = document.querySelector('#recentOrdersTable tbody');
+          tableBody.innerHTML = '';
+      
+          recentOrders.forEach((order, index) => {
+              const row = tableBody.insertRow();
+              row.innerHTML = `
+                  <td>${index + 1}</td>
+                  <td>${order.orderId}</td>
+                  <td>${order.date}</td>
+                  <td>${order.status}</td>
+              `;
+          });
+      }
+      
+      function downloadReport(blob, type) {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          a.download = `sales_report.${type === 'pdf' ? 'pdf' : 'xlsx'}`;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+      }
+      
+      
+      
+      // Add quick date range selection
+      const quickRanges = {
+          'today': () => {
+              const today = new Date();
+              return { start: today, end: today };
+          },
+          'thisWeek': () => {
+              const today = new Date();
+              const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+              return { start: startOfWeek, end: new Date() };
+          },
+          'thisMonth': () => {
+              const today = new Date();
+              const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+              return { start: startOfMonth, end: today };
+          },
+          'thisYear': () => {
+              const today = new Date();
+              const startOfYear = new Date(today.getFullYear(), 0, 1);
+              return { start: startOfYear, end: today };
+          }
+      };
+      
+      function setDateRange(range) {
+          const { start, end } = quickRanges[range]();
+          document.getElementById('startDate').valueAsDate = start;
+          document.getElementById('endDate').valueAsDate = end;
+      }
+      </script>
+      
+</body>
+
+</html>

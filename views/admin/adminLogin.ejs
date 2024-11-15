@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login</title>
+  <link rel="shortcut icon" href="/images/iconshoe.jpg" type="">
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  
+  <style>
+    body {
+      background-image: url('/public/images/adminbg.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Roboto', sans-serif;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Background overlay for readability */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6); /* Dark overlay */
+      z-index: -1;
+    }
+
+    .card {
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      background-color: rgba(255, 255, 255, 0.9); /* Slight transparency */
+    }
+
+    .form-control {
+      border-radius: 10px;
+    }
+
+    .btn-custom {
+      background-color: #1a73e8;
+      color: white;
+      border-radius: 25px;
+      padding: 10px 30px;
+    }
+
+    .btn-custom:hover {
+      background-color: #155ab6;
+    }
+
+    .admin-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .admin-header h3 {
+      font-weight: 600;
+    }
+
+    .admin-header img {
+      width: 60px;
+      margin-bottom: 10px;
+    }
+
+    .text-muted {
+      font-size: 0.9rem;
+    }
+
+    .forgot-link {
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .btn-custom {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="card p-4">
+          <div class="admin-header">
+            <!-- <img src="/public/images/favicon.png" alt="Admin Logo"> -->
+            <h3>Admin Login</h3>
+          </div>
+          
+          <form action="#" method="post">
+            <!-- Email Input -->
+            <div class="form-group mb-3">
+              <label for="adminEmail" class="form-label">Admin Email</label>
+              <input type="email" class="form-control" id="adminEmail" name="email" placeholder="admin@example.com" required>
+            </div>
+
+            <!-- Password Input -->
+            <div class="form-group mb-4">
+              <label for="adminPassword" class="form-label">Password</label>
+              <input type="password" class="form-control" id="adminPassword" name="password" placeholder="Enter your password" required>
+            </div>
+
+            <!-- Login Button -->
+            <div class="d-grid">
+              <button onclick="login(event)" type="submit" class="btn btn-custom btn-lg">Login</button>
+            </div>
+
+            <!-- Forgot Password Link -->
+            <div class="mt-3 text-center">
+              <a href="/admin/forgot-password" class="text-decoration-none forgot-link">Forgot Password?</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+    function login(event){
+      event.preventDefault();
+      const email= document.getElementById('adminEmail').value.trim()
+      const Password= document.getElementById('adminPassword').value.trim()
+      if(!email||!Password){
+        Swal.fire({
+          title:"Error",
+          text:"All fields must be filled",
+          icon:"error"
+        })
+        return
+      }
+      fetch("/admin/adminPage",{
+        method:'POST',
+        headers:{
+          "Content-Type": "application/json"
+        },
+        body:JSON.stringify({email,Password}),
+      })
+      .then((res)=>res.json())
+      .then((data)=>{
+        if(data.success){
+          Swal.fire({
+            title:'success',
+            text:"Login successful",
+            icon:"success",
+            timer: 1000
+          }).then(()=>{
+            window.location.href="/admin/loadAdminDash"
+          });
+        }else if(data.error){
+          Swal.fire({
+            title:"Error",
+            text:data.error,
+            icon:"error"
+          })
+        }
+      })
+      .catch((error)=>{
+        Swal.fire({
+          title:"Oops!",
+          text:"Something weng wrong! Please try again",
+          icon:"error"
+        })
+      })
+    }
+  </script>
+</body>
+</html>

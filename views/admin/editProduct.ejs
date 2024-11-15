@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Products</title>
+    <link rel="shortcut icon" href="/images/iconshoe.jpg" type="">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Form container styling */
+        .form-container {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+
+        .form-container h2 {
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .form-container label {
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-container .form-control {
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: -0.25rem 1.25rem;
+        }
+
+        .form-container .btn-submit {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 0.75rem 1.25rem;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .form-container .btn-submit:hover {
+            background-color: #0056b3;
+            color: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 767px) {
+            .form-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <section>
+        <div class="container mt-4">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="form-container">
+                        <h2 class="text-center">Edit Products</h2>
+                        <form id="editProductForm" action="/admin/editProduct/<%= Product._id %>" method="post" enctype="multipart/form-data">
+                            <!-- Product Name -->
+                            <div class="form-group"> 
+                                <label for="name">Product Name</label>
+                                <input type="text" id="name" name="productName" class="form-control" value="<%= Product.productname %>" required>
+                            </div>
+                        
+                            <!-- Category -->
+                            <div class="form-group">
+                                <label for="category">Category</label>
+                                <select id="category" name="Category_id" class="form-control" required>
+                                    <option value="<%= Product.category_id._id %>"><%= Product.category_id.category_name %></option>
+                                    <% Category.forEach((category) => { %>
+                                        <% if(category.category_name != Product.category_id.category_name){ %>
+                                            <option value="<%= category._id %>"><%= category.category_name %></option>
+                                        <% } %>
+                                    <% }) %>
+                                </select>
+                            </div>
+                        
+                            <!-- Price, Qty, Description -->
+                            <div class="form-group">
+                                <label for="price">Price</label>
+                                <input type="number" id="price" name="price" class="form-control" value="<%= Product.price %>" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="stock">Qty</label>
+                                <input type="number" id="stock" name="stock" class="form-control" value="<%= Product.stock %>" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <input type="text" id="description" name="description" class="form-control" value="<%= Product.description %>" required>
+                            </div>
+                        
+                            <!-- Images -->
+                            <div class="form-group">
+                                <label for="image1">Image1</label>
+                                <img src="<%= Product.images[0] %>" alt="" style="width:100px;height:auto" id="imgview1" class="pt-3">
+                                <input type="file" name="image1" class="form-control" onchange="viewImage(event, 'imgview1')">
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="image2">Image2</label>
+                                <img src="<%= Product.images[1] %>" alt="" style="width:100px;height:auto" id="imgview2" class="pt-3">
+                                <input type="file" name="image2" class="form-control" onchange="viewImage(event, 'imgview2')">
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="image3">Image3</label>
+                                <img src="<%= Product.images[2] %>" alt="" style="width:100px;height:auto" id="imgview3" class="pt-3">
+                                <input type="file" name="image3" class="form-control" onchange="viewImage(event, 'imgview3')">
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="image4">Image4</label>
+                                <img src="<%= Product.images[3] %>" alt="" style="width:100px;height:auto" id="imgview4" class="pt-3">
+                                <input type="file" name="image4" class="form-control" onchange="viewImage(event, 'imgview4')">
+                            </div>
+                        
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-submit mt-4">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function viewImage(event, imgId) {
+            document.getElementById(imgId).src = URL.createObjectURL(event.target.files[0]);
+        }
+
+        //Edit product conformation
+        document.getElementById('editProductForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to save the changes to this product?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#146a0f',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, save it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire(
+                'Saved!',
+                'Product details have been updated.',
+                'success'
+            );
+            setTimeout(() => {
+                event.target.submit();
+            }, 1000);
+        }
+    });
+});
+    </script>
+    
+</body>
+
+</html>

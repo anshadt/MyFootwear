@@ -1,0 +1,472 @@
+<%- include('../../views/partials/userHeader') %>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+            padding-top: 80px;
+        }
+        .wallet-card {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .btn-custom {
+            border-radius: 25px;
+            padding: 10px 20px;
+        }
+        .transaction-item:hover {
+            background-color: #f8f9fa;
+            transition: background-color 0.3s ease;
+        }
+        .nav-link {
+            color: #495057;
+            font-weight: 500;
+        }
+        .nav-link:hover {
+            color: #2575fc;
+        }
+        .table th {
+            font-weight: 600;
+            color: #495057;
+        }
+    .sidebar {
+      height: 100vh;
+      background-color: #2c3e50;
+      position: fixed;
+      padding-top: 5rem;
+    }
+    .sidebar a {
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+    .sidebar a:hover {
+      background-color: #34495e;
+    }
+    .profile-header {
+      background-color: #00bcd4; /* Teal 300 */
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .profile-pic {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 5px solid white;
+      transition: transform 0.3s;
+    }
+    .profile-pic:hover {
+      transform: scale(1.1);
+    }
+    .profile-card {
+      margin-top: 20px;
+      z-index: 1;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .address-card {
+      background: #f1f1f1;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 10px;
+      position: relative;
+      transition: background 0.3s;
+    }
+    .address-card:hover {
+      background: #e1e1e1;
+    }
+
+    .dropdown-menu {
+  padding: 0;
+  margin: 0;
+}
+
+.profile-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  padding: 8px 16px;
+  transition: background-color 0.2s ease; 
+}
+
+.profile-link:hover {
+  background-color: #f0f0f0; 
+}
+
+.profile-avatar {
+  width: 24px; 
+  height: 24px;
+  border-radius: 50%; 
+  margin-right: 8px; 
+}
+
+.logout-link {
+  margin-bottom: 8px; 
+}
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; 
+}
+
+.content-section {
+  margin-top: 20px; 
+}
+
+.breadcrumb {
+            background-color: #f8f9fa; 
+            border-radius: 0.375rem;
+            padding: 0.75rem 1rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); 
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: ">";
+            color: #6c757d;
+        }
+
+        .breadcrumb-item a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .breadcrumb-item a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb-item.active {
+            color: #6c757d; 
+        }
+    </style>
+</head>
+<body>
+    <header class="header_section bg-dark fixed-header">
+        <div class="container">
+          <nav class="navbar navbar-expand-lg custom_nav-container">
+            <a class="navbar-brand" href="/userHomePage">
+              <span>
+                Footwear
+              </span>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+              <span class=""> </span>
+            </button>
+      
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav mx-auto">
+                <li class="nav-item active">
+                  <a class="nav-link" href="/userHomePage">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">About us</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Contact us</a>
+                </li>
+              </ul>
+      
+              <!-- User Profile and Cart Section -->
+              <div class="user_option">
+                <a class="cart_link position-relative" href="/getCartPage">
+                  <!-- Cart Icon SVG -->
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 456.029 456.029" width="50" height="50">
+                    <path d="M345.6 338.862c-29.184 0-53.248 23.552-53.248 53.248s23.552 53.248 53.248 53.248 53.248-23.552 53.248-53.248-23.552-53.248-53.248-53.248zM439.296 84.91h-330.56l-5.12-34.304c-2.048-13.824-21.504-30.72-44.544-30.72H20.48C9.216 19.886 0 29.102 0 40.366S9.216 60.846 20.48 60.846h41.472c2.56 0 4.608 2.048 5.12 4.608l31.744 216.064c4.096 27.136 27.648 47.616 55.296 47.616h212.992c26.624 0 49.664-18.944 55.296-45.056l33.28-166.4c4.096-21.504-3.072-32.256-14.336-34.304zM215.04 389.55c-1.024-28.16-24.576-50.688-52.736-50.688-29.696 1.536-52.224 26.112-51.2 55.296 1.024 28.16 24.064 50.688 52.224 50.688 29.184 0 52.224-24.576 51.712-55.296z"/>
+                  </svg>
+                  <!-- Cart Count Badge -->
+                  <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    <%= cartCount %>
+                  </span>
+                </a>
+                <a class="cart_link position-relative" href="/wishlist">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="50" height="50" fill="red">
+                    <path d="M462.3 62.7C407 7.4 324.8 23.9 270.1 79.1L256 93.3l-14.1-14.2c-54.8-55.2-136.9-71.7-192.2-16.4S-7.4 199.9 48 255.2L239 445.5c7.4 7.5 19.6 7.5 27 0l205.4-205.4c55.2-54.8 71.7-136.9 16.4-192.2z"/>
+                  </svg>
+                  <span data-toggle="tooltip" data-placement="bottom" title="<%= wishlistCount %>" id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    <%= wishlistCount %>
+                  </span>
+                </a>
+                <p class="user_proname"><%= user.name %></p>
+      
+                <div class="dropdown">
+                  <button class="btn btn-secondary dropdown-toggle" type="button" id="loginDropdown" data-toggle="dropdown">
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                  </button>
+      
+                  <div class="dropdown-menu">
+                    <a href="/profilePage" class="profile-link">
+                      <img src="/images/profile.png" class="profile-avatar"> Profile
+                    </a>
+                    <a href="/orderHistory" class="profile-link">
+                      <img src="/images/purchase-order.png" class="profile-avatar"> Orders
+                    </a>
+                    <a href="/getCartPage" class="profile-link">
+                      <img src="/images/shopping-cart (1).png" class="profile-avatar"> Cart
+                    </a>
+                    <a href="wishlist" class="profile-link">
+                      <img src="/images/wishlist.png" class="profile-avatar"> Wishlist
+                    </a>
+                    <a href="/loadWalletPage" class="profile-link">
+                      <img src="/images/wallet.png" class="profile-avatar"> Wallet
+                    </a>
+                    <a href="/logout"class="profile-link logout-link">
+                      <img src="/images/shutdown.png" class="profile-avatar"> Logout
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </header>
+      <div class="container mt-5">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/userHomePage">Home</a></li>
+              <li class="breadcrumb-item"><a href="/profilePage">Profile</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Wallet</li>
+          </ol>
+      </nav>
+
+    <main class="container py-5">
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-6">
+                <div class="card wallet-card h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Current Balance</h5>
+                        <h2 class="card-text mb-4 display-4 fw-bold">₹<%= wallet.balanceAmount.toFixed(2) %></h2>
+                        <!-- <div class="mt-auto d-flex justify-content-between">
+                            <button class="btn btn-outline-light btn-custom" data-bs-toggle="modal" data-bs-target="#addFundsModal">
+                                <i class="fas fa-plus-circle me-2"></i>Add Funds
+                            </button>
+
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title mb-4">Recent Transactions</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          <% if (wallet.wallet_history.length>0) { %>
+                            <% wallet.wallet_history.forEach(element => { %>
+                              <% if (element.transactionType == 'credited') { %>
+                                <tr class="transaction-item">
+                                  <td><i class="fas fa-arrow-up text-success"></i></td>
+                                  <td><%= element.description %></td>
+                                  <td class="text-success">+₹<%= element.amount %></td>
+                                  <td>
+                                    <%= ("0" + element.date.getDate()).slice(-2) %>/
+                                    <%= ("0" + (element.date.getMonth() + 1)).slice(-2) %>/
+                                    <%= element.date.getFullYear() %> 
+                                    <%= ("0" + element.date.getHours()).slice(-2) %>:
+                                    <%= ("0" + element.date.getMinutes()).slice(-2) %>:
+                                    <%= ("0" + element.date.getSeconds()).slice(-2) %>
+                                  </td>                                  
+                              </tr>
+                              <% }else{ %>
+                                <tr class="transaction-item">
+                                  <td><i class="fas fa-arrow-down text-danger"></i></td>
+                                  <td><%= element.description %></td>
+                                  <td class="text-danger">-₹<%= element.amount %></td>
+                                  <td>
+                                    <%= ("0" + element.date.getDate()).slice(-2) %>/
+                                    <%= ("0" + (element.date.getMonth() + 1)).slice(-2) %>/
+                                    <%= element.date.getFullYear() %> 
+                                    <%= ("0" + element.date.getHours()).slice(-2) %>:
+                                    <%= ("0" + element.date.getMinutes()).slice(-2) %>:
+                                    <%= ("0" + element.date.getSeconds()).slice(-2) %>
+                                  </td>
+                                  
+                              </tr>
+                              <% } %>
+                              <% }) %>
+                          <% } else{ %>
+                            <tr class="transaction-item">
+                              <td colspan="5" class="text-center text-danger">No transaction found</td>
+                          </tr>
+                            <% } %>
+                         
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Add Funds Modal -->
+    <div class="modal fade" id="addFundsModal" tabindex="-1" aria-labelledby="addFundsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addFundsModalLabel">Add Funds</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="addAmount" class="form-label">Amount</label>
+                            <div class="input-group">
+                                <span class="input-group-text">₹</span>
+                                <input type="number" class="form-control" id="amount" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-custom" onclick="AddFund()">Add Funds</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+      async function AddFund() {
+  
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+  
+        const amount = document.getElementById('amount').value;
+  
+        if (!amount) {
+          Toast.fire({
+            icon: "error",
+            title: "amount is empty"
+          });
+          return
+        }
+        if (isNaN(amount)) {
+          Toast.fire({
+            icon: "error",
+            title: "Invalid amount. Please enter a number."
+          });
+          return;
+        }
+        if (parseFloat(amount) <= 0) {
+          Toast.fire({
+            icon: "error",
+            title: "Amount must be greater than zero."
+          });
+          return;
+        }
+        const maxAmount = 100000;
+        if (parseFloat(amount) > maxAmount) {
+          Toast.fire({
+            icon: "error",
+            title: `Amount cannot exceed ${maxAmount}.`
+          });
+          return;
+        }
+  
+  
+        try {
+          const response = await fetch('/addFund', {
+            headers: {
+              "Content-Type": "application/json"
+            },
+            method: 'POST',
+            body: JSON.stringify({ amount })
+          });
+          if (response.ok) {
+            const result = await response.json()
+            console.log(result)
+            
+  
+            const options = {
+              key: 'rzp_test_yn3COcw99NFgtQ',
+              amount: result.amount,
+              currency: result.currency,
+              name: 'Your wallet',
+              order_id: result.id,
+              description: "Adding fund to wallet",
+              handler: async function (response) {
+                try {
+                
+  
+                  
+                  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = response;
+                  
+                  const responce = await fetch('/verifyPayment', {
+                    method: "POST",
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ razorpay_order_id, razorpay_payment_id, razorpay_signature, amount: result.amount })
+                  })
+  
+  
+                  const data = await responce.json();
+  
+                  if (data.success) {
+                    Swal.fire("Success", "Funds added successfully!", "success").then(() => {
+                      location.reload();  
+                    });
+                  } else {
+                    Swal.fire("Error", "Payment verification failed. Please try again.", "error");
+                  }
+  
+  
+                } catch (error) {
+                  console.error('Error verifying payment:', error);
+                  swal("Error", "An error occurred while verifying the payment. Please try again.", "error");
+                }
+  
+              },
+              prefill: {
+                name: 'Anshad',
+                email: 'anshadshaccg@gamil.com',
+                contact: '9740446155'
+              },
+              theme: {
+                color: '#000000'
+              }
+            }
+            const razorpay = new Razorpay(options);
+            razorpay.open();
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'failed to create order',
+            })
+  
+          }
+        } catch (error) {
+          console.error('Error adding funds:', error);
+          swal("Error", "An error occurred while adding funds. Please try again.", "error");
+        }  
+      }
+    </script>
+
+    <%- include('../../views/partials/userFooter') %>

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <link rel="shortcut icon" href="/images/iconshoe.jpg" type="">
+  <title> Footwear </title>
+  <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
+  <link href="css/font-awesome.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css">
+  <link href="css/responsive.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/ar.css">
+  <link rel="stylesheet" href="css/icomoon.css">
+
+
+
+  <style>
+    .dropdown-menu {
+  padding: 0;
+  margin: 0;
+}
+
+.profile-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit; /* Adjust this based on your theme */
+  padding: 8px 16px; /* Adjust padding as needed */
+  transition: background-color 0.2s ease; /* Smooth background color transition */
+}
+
+.profile-link:hover {
+  background-color: #f0f0f0; /* Highlight on hover */
+}
+
+.profile-avatar {
+  width: 24px; /* Size of the avatar */
+  height: 24px;
+  border-radius: 50%; /* Circular avatar */
+  margin-right: 8px; /* Space between avatar and text */
+}
+
+.logout-link {
+  margin-bottom: 8px; /* Space between logout and profile link */
+}
+
+  </style>
+</head>
+<body class="sub_page">
+  <!-- Hero Area -->
+  <div class="hero_area">
+    <div class="bg-box">
+      <img src="/images/hero-bg.jpg" alt="">
+    </div>
+
+    <!-- Header Section -->
+    <header class="header_section">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg custom_nav-container">
+          <a class="navbar-brand" href="/userHomePage">
+            <span>
+             Footwear
+            </span>
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+            <span class=""> </span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mx-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="/userHomePage">Home <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">About us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Contact us</a>
+              </li>
+            </ul>
+
+            <!-- User Profile and Cart Section -->
+            <div class="user_option">
+              <a class="cart_link position-relative" href="/getCartPage">
+                <!-- Cart Icon SVG -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 456.029 456.029" width="50" height="50">
+                  <path d="M345.6 338.862c-29.184 0-53.248 23.552-53.248 53.248s23.552 53.248 53.248 53.248 53.248-23.552 53.248-53.248-23.552-53.248-53.248-53.248zM439.296 84.91h-330.56l-5.12-34.304c-2.048-13.824-21.504-30.72-44.544-30.72H20.48C9.216 19.886 0 29.102 0 40.366S9.216 60.846 20.48 60.846h41.472c2.56 0 4.608 2.048 5.12 4.608l31.744 216.064c4.096 27.136 27.648 47.616 55.296 47.616h212.992c26.624 0 49.664-18.944 55.296-45.056l33.28-166.4c4.096-21.504-3.072-32.256-14.336-34.304zM215.04 389.55c-1.024-28.16-24.576-50.688-52.736-50.688-29.696 1.536-52.224 26.112-51.2 55.296 1.024 28.16 24.064 50.688 52.224 50.688 29.184 0 52.224-24.576 51.712-55.296z"/>
+                </svg>
+                <!-- Cart Count Badge -->
+                <span data-toggle="tooltip" data-placement="bottom" title="<%= cartCount %>" id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  <%= cartCount %>
+                </span>
+              </a>
+
+              <!-- Wishlist Section -->
+              <a class="cart_link position-relative" href="/wishlist">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="50" height="50" fill="red">
+                  <path d="M462.3 62.7C407 7.4 324.8 23.9 270.1 79.1L256 93.3l-14.1-14.2c-54.8-55.2-136.9-71.7-192.2-16.4S-7.4 199.9 48 255.2L239 445.5c7.4 7.5 19.6 7.5 27 0l205.4-205.4c55.2-54.8 71.7-136.9 16.4-192.2z"/>
+                </svg>
+                <span data-toggle="tooltip" data-placement="bottom" title="<%= wishlistCount %>" id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  <%= wishlistCount %>
+                </span>
+              </a>
+            <p data-toggle="tooltip" data-placement="bottom" title="<%= user.name %>" class="user_proname"><%= user.name %></p>
+
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="loginDropdown" data-toggle="dropdown">
+                  <i class="fa fa-user" aria-hidden="true"></i>
+                </button>
+
+                <div class="dropdown-menu">
+                  <a href="/profilePage" class="profile-link">
+                    <img src="/images/profile.png" class="profile-avatar"> Profile
+                  </a>
+                  <a href="/orderHistory" class="profile-link">
+                    <img src="/images/purchase-order.png" class="profile-avatar"> Orders
+                  </a>
+                  <a href="/getCartPage" class="profile-link">
+                    <img src="/images/shopping-cart (1).png" class="profile-avatar"> Cart
+                  </a>
+                  <a href="wishlist" class="profile-link">
+                    <img src="/images/wishlist.png" class="profile-avatar"> Wishlist
+                  </a>
+                  <a href="/loadWalletPage" class="profile-link">
+                    <img src="/images/wallet.png" class="profile-avatar"> Wallet
+                  </a>
+                  <a href="/logout"class="profile-link logout-link">
+                    <img src="/images/shutdown.png" class="profile-avatar"> Logout
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <!-- End Header Section -->
+  </div>
+ <!-- Food Section -->
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+  <div class="container-fluid">
+    <!-- Toggler for mobile view -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
+            aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <!-- Offer Products dropdown -->
+        <!-- <li class="nav-item dropdown me-lg-4">
+          <a class="nav-link dropdown-toggle text-white" href="#" id="offerProductsDropdown" role="button" 
+             data-bs-toggle="dropdown" aria-expanded="false">Offer Products</a>
+          <ul class="dropdown-menu" aria-labelledby="offerProductsDropdown">
+            <li><a class="dropdown-item" href="#">15% Offer</a></li>
+            <li><a class="dropdown-item" href="#">20% Offer</a></li>
+            <li><a class="dropdown-item" href="#">25% Offer</a></li>
+          </ul>
+        </li> -->
+
+        <!-- Sort Items dropdown -->
+        <li class="nav-item dropdown me-lg-4">
+          <a class="nav-link dropdown-toggle text-white" href="#" id="sortedItemsDropdown" role="button" 
+             data-bs-toggle="dropdown" aria-expanded="false">Sort</a>
+          <ul class="dropdown-menu" aria-labelledby="sortedItemsDropdown">
+            <li><a class="dropdown-item" href="#" onclick="updateSort('name_asc')">Name (A-Z)</a></li>
+            <li><a class="dropdown-item" href="#" onclick="updateSort('name_desc')">Name (Z-A)</a></li>
+            <li><a class="dropdown-item" href="#" onclick="updateSort('price_asc')">Price (Low to High)</a></li>
+            <li><a class="dropdown-item" href="#" onclick="updateSort('price_desc')">Price (High to Low)</a></li>
+            <li><a class="dropdown-item" href="#" onclick="updateSort('newest')">Newest First</a></li>
+          </ul>
+        </li>
+        <!-- Filter Items dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-white" href="#" id="filterItemsDropdown" role="button" 
+             data-bs-toggle="dropdown" aria-expanded="false">Filter</a>
+          <ul class="dropdown-menu" aria-labelledby="filterItemsDropdown">
+            <!-- "All" filter option -->
+            <li><a class="dropdown-item" data-filter="*" onclick="filterSelection('all', this)">All</a></li>
+            <% Category.forEach(category => { %>
+            <li><a class="dropdown-item" role="button" tabindex="0" data-filter="<%= category._id %>" 
+                   onclick="filterSelection('<%= category._id %>', this)"><%= category.category_name %></a></li>
+            <% }); %>
+          </ul>
+        </li>        
+      </ul>
+      <!-- Search bar -->
+      <form class="d-flex mx-auto" style="width: 40%;" onsubmit="return performSearch()">
+        <div class="input-group">
+            <!-- Set the input value to the search term, if available -->
+            <input class="form-control border-0" id="searchInput" type="search" 
+                   placeholder="Search for items..." aria-label="Search" 
+                   style="background-color: #f8f9fa; border-radius: 20px 0 0 20px;"
+                   value="<%= searchParams.search %>" oninput="toggleClearButton()">
+    
+            <!-- Clear button, initially hidden, shown based on input content -->
+            <button type="button" class="btn btn-light border-0" id="clearButton" 
+                    style="display: none; position: absolute; right: 3.5rem; z-index: 1;" 
+                    onclick="clearSearch()">
+                <i class="fa fa-times text-muted"></i>
+            </button>
+    
+            <!-- Search button -->
+            <button class="btn" type="submit" style="background-color: #ffc107; border-radius: 0 20px 20px 0;">
+                <i class="fa fa-search text-white"></i>
+            </button>
+        </div>
+    </form>
+    
+    
+    
+  
+    </div>
+  </div>
+</nav>
+  <section class="food_section layout_padding">
+    <div class="container">
+      <div class="heading_container heading_center">
+        <a style="color: black;" data-toggle="tooltip" data-placement="bottom" title="Refresh" href="/userHomePage"><h2>Choose Category Menu</h2></a>
+      </div>
+      <!-- Categories List -->
+      <ul class="filters_menu">
+        <li data-toggle="tooltip" data-placement="bottom" title="All" class="active" data-filter="*" onclick="filterSelection('all')">All</li>
+        <% Category.forEach(category => { %>
+          <li data-toggle="tooltip" data-placement="bottom" title="<%= category.category_name %>" data-filter="<%= category._id %>" onclick="filterSelection('<%= category._id %>')"><%= category.category_name %></li>
+        <% }); %>
+      </ul>
+      <!-- Products List -->
+      <div class="filters-content">
+        <div class="row grid">
+          <% if (products.length > 0) { %>
+            <% products.forEach(product => { %>
+              <div class="col-sm-6 col-lg-4 all" data-category="<%= product.category_id %>">
+                <div class="box">
+                  <div>
+                    <div class="img-box position-relative">
+                      <!-- Offer Percentage Badge -->
+                      <% if(product.offer) { %>
+                        <div class="offer-badge position-absolute" style="top: 10px; right: 10px; background-color: rgba(255, 0, 0, 0.8); color: #fff; padding: 5px 8px; border-radius: 5px; font-size: 0.8em;">
+                          <%= product.offer.offerPercentage %>% OFF
+                        </div>
+                      <% } %>
+                
+                      <a href="/user/singleProductView/<%= product._id %>">
+                        <img data-toggle="tooltip" data-placement="bottom" title="<%= product.productname %>" src="<%= product.images[0] %>" alt="Product Image" style="width: 100%; display: block;">
+                      </a>
+                    </div>
+                    
+                    <div class="detail-box">
+                      <h5><%= product.productname %></h5>
+                      <% if(product.offer) { %>
+                        <h6>
+                          <span style="text-decoration: line-through; color: rgb(255, 0, 0);">₹ <%= product.price %></span>
+                          <span style="font-size: 1.2em; margin-left: 8px;">₹ <%= product.discount_price %></span>
+                        </h6>
+                      <% } else { %>
+                        <h6>₹ <%= product.price %></h6>
+                      <% } %>
+                      
+                      <p class="<%= product.stock > 0 ? 'text-success' : 'text-danger' %>">
+                        <%= product.stock > 0 ? `${product.stock} In Stock` : 'Out of Stock' %>
+                      </p>
+                      <p><%= product.description %></p>
+                      <span class="text-warning">★ ★ ★ ★ ☆</span> (4.5)
+                      <div class="d-flex">
+                        <!-- Add to Cart Button -->
+                        <div class="btn btn-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                          <a id="addToCart" href="#" onclick="addToCart('<%= product._id %>')" class="text-white">
+                            <i data-toggle="tooltip" data-placement="bottom" title="Add To Cart" class="bi bi-cart-fill"></i>
+                          </a>
+                        </div>
+                        <!-- Wishlist Button -->
+                        <div class="d-flex ml-3">
+                          <a href="#" onclick="addToWishlist('<%= product._id %>')" class="btn btn-danger btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i data-toggle="tooltip" data-placement="bottom" title="Add To Wishlist" class="bi bi-heart-fill"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+            <% }); %>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Add this section after the product grid -->
+      <div id="noProductsMessage" class="col-12 text-center mt-3 " style="display: none;">
+        <p>No products found.</p>
+      </div>
+
+      <!-- Pagination -->
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center mt-4">
+          <% if (currentPage > 1) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+          <% } %>
+          
+          <% for(let i = 1; i <= totalPages; i++) { %>
+            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+              <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+            </li>
+          <% } %>
+          
+          <% if (currentPage < totalPages) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          <% } %>
+        </ul>
+      </nav>
+
+      <!-- Remove the "View More" button as it's no longer needed -->
+      <!-- <div class="btn-box">
+        <a href="#">View More</a>
+      </div> -->
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer id="colorlib-footer" role="contentinfo">
+    <div class="container">
+      <div class="row row-pb-md">
+        <div class="col footer-col colorlib-widget">
+          <h4>About Footwear</h4>
+          <p>Even the all-powerful Pointing has no control about the blind texts it is an almost
+            unorthographic life</p>
+          <p>
+          <ul class="colorlib-social-icons">
+            <li><a href="#"><i class="icon-twitter"></i></a></li>
+            <li><a href="#"><i class="icon-facebook"></i></a></li>
+            <li><a href="#"><i class="icon-linkedin"></i></a></li>
+            <li><a href="#"><i class="icon-dribbble"></i></a></li>
+          </ul>
+          </p>
+        </div>
+        <div class="col footer-col colorlib-widget">
+          <h4>Customer Care</h4>
+          <p>
+          <ul class="colorlib-footer-links">
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Returns/Exchange</a></li>
+            <li><a href="#">Gift Voucher</a></li>
+            <li><a href="#">Wishlist</a></li>
+            <li><a href="#">Special</a></li>
+            <li><a href="#">Customer Services</a></li>
+            <li><a href="#">Site maps</a></li>
+          </ul>
+          </p>
+        </div>
+        <div class="col footer-col colorlib-widget">
+          <h4>Information</h4>
+          <p>
+          <ul class="colorlib-footer-links">
+            <li><a href="#">About us</a></li>
+            <li><a href="#">Delivery Information</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Support</a></li>
+            <li><a href="#">Order Tracking</a></li>
+          </ul>
+          </p>
+        </div>
+
+        <div class="col footer-col">
+          <h4>News</h4>
+          <ul class="colorlib-footer-links">
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="#">Press</a></li>
+            <li><a href="#">Exhibitions</a></li>
+          </ul>
+        </div>
+
+        <div class="col footer-col">
+          <h4>Contact Information</h4>
+          <ul class="colorlib-footer-links">
+            <li>291 South 21th Street, <br> Suite 721 New York NY 10016</li>
+            <li><a href="tel://1234567920">+ 1235 2355 98</a></li>
+            <li><a href="mailto:info@yoursite.com">info@yoursite.com</a></li>
+            <li><a href="#">yoursite.com</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="copy">
+      <div class="row">
+        <div class="col-sm-12 text-center">
+          <p>
+            <span><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+              Copyright &copy;
+              <script>document.write(new Date().getFullYear());</script> All rights reserved | This
+              template is made with <i class="icon-heart" aria-hidden="true"></i> by <a
+                href="https://colorlib.com" target="_blank">Colorlib</a>
+              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            </span>
+            <span class="block">Demo Images: <a href="http://unsplash.co/" target="_blank">Unsplash</a>
+              , <a href="http://pexels.com/" target="_blank">Pexels.com</a></span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="js/custom.js"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+ 
+ 
+  <script>
+    // Filter function for product categories
+    function filterSelection(categoryId) {
+      const allProducts = document.querySelectorAll('.all');
+      let visibleProducts = 0;
+      allProducts.forEach(product => {
+        if (categoryId === 'all' || product.getAttribute('data-category') === categoryId) {
+          product.style.display = 'block';
+          visibleProducts++;
+        } else {
+          product.style.display = 'none';
+        }
+      });
+      
+      // Show or hide the "No products found" message
+      const noProductsMessage = document.getElementById('noProductsMessage');
+      noProductsMessage.style.display = visibleProducts === 0 ? 'block' : 'none';
+    }
+
+    let currentSort = '';
+    let currentMinPrice = '';
+    let currentMaxPrice = '';
+
+    function updateSort(sortOption) {
+      currentSort = sortOption;
+      performSearch();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+    toggleClearButton();
+});
+
+function performSearch() {
+    const searchTerm = document.getElementById('searchInput').value;
+    let url = `/search?search=${encodeURIComponent(searchTerm)}`;
+    
+    if (currentSort) {
+        url += `&sort=${currentSort}`;
+    }
+    if (currentMinPrice) {
+        url += `&min_price=${currentMinPrice}`;
+    }
+    if (currentMaxPrice) {
+        url += `&max_price=${currentMaxPrice}`;
+    }
+
+    window.location.href = url;
+    return false; 
+}
+
+function toggleClearButton() {
+    const searchInput = document.getElementById('searchInput');
+    const clearButton = document.getElementById('clearButton');
+    clearButton.style.display = searchInput.value ? 'inline' : 'none';
+}
+
+function clearSearch() {
+    const searchInput = document.getElementById('searchInput');
+    searchInput.value = '';
+    toggleClearButton();
+    window.location.href = '/userHomePage';  // Redirect to the default product list
+}
+  </script>
+
+<script>
+  async function addToCart(productId, quantity) {
+    try {
+      const response = await fetch('/postCartPage', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productId: productId, quantity: quantity }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        Swal.fire({
+          title: 'Success!',
+          text: result.message,
+          icon: 'success',
+          timer: 1000,
+          showConfirmButton: false,
+        }).then(() => {
+            window.location.reload() 
+              });
+      } else {
+        const result = await response.json();
+        Swal.fire({
+          title: 'Error!',
+          text: result.message,
+          icon: 'error',
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Something went wrong.',
+        icon: 'error',
+      });
+    }
+  }
+
+
+
+  async function addToWishlist(productId) {
+      try {
+        const response = await fetch('/addWishlist', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ productId: productId }),
+        });
+        if (response.ok) {
+          const result = await response.json();
+          Swal.fire({
+            title: 'Success!',
+            text: result.message,
+            icon: 'success',
+            timer: 1000,
+            showConfirmButton: false,
+          }).then(() => {
+                      window.location.reload() 
+                  });
+        } else {
+          const result = await response.json();
+          Swal.fire({
+            title: 'Error!',
+            text: result.message,
+            icon: 'error',
+          });
+        }
+      } catch (error) {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Something went wrong.',
+          icon: 'error',
+        });
+      }
+    }
+
+     
+</script>
+
+
+</body>
+
+</html>

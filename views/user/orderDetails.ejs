@@ -1,0 +1,15 @@
+<script>
+    function updateOrderStatus() {
+        const orderId = '<%= order._id %>';
+        fetch(`/order-status/${orderId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('orderStatus').textContent = data.status;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    setInterval(updateOrderStatus, 30000);
+</script>

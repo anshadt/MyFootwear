@@ -1,0 +1,57 @@
+.food_section .box .options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px; /* Add some space between the price and the icon */
+  }
+  
+  .food_section .box .options h6 {
+      margin: 0;
+      position: absolute;
+      left: 27px;
+      bottom: 68px;
+  }
+  
+  .food_section .box .options a {
+      width: 40px;
+      height: 40px;
+      border-radius: 100%;
+      background: #ffbe33;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      position: absolute;
+      right: 35px;
+      bottom: 61px;
+  }
+  .food_section .box .options a svg {
+    width: 24px; /* Adjust the size of the SVG */
+    height: auto;
+    fill: #ffffff;
+  }
+  
+  /* Adjust the wishlist heart icon at the left-bottom */
+  .food_section .box .option {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+  }
+  
+  .food_section .box .option a {
+      width: 39px;
+      height: 34px;
+      border-radius: 100%;
+      background: #f02975;
+      display: flex;
+      justify-content: center; 
+      align-items: center;
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+  }

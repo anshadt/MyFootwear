@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <!-- nice select  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+  <!-- font awesome style -->
+  <link href="/css/font-awesome.min.css" rel="stylesheet" />
+
+  <!-- Custom styles for this template -->
+  <link href="/css/ar.css" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="/css/responsive.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #f4f7fa;
+    }
+    .profile-header {
+      background-color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      border-radius: 10px;
+    }
+    .profile-picture {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 5px solid #007bff;
+      transition: transform 0.3s ease;
+    }
+    .profile-picture:hover {
+      transform: scale(1.05);
+    }
+    .profile-details h5 {
+      color: #007bff;
+      font-weight: bold;
+    }
+    .list-group-item {
+      background-color: transparent;
+      border: none;
+      padding-left: 0;
+      text-decoration: none;
+    }
+    .list-group-item strong {
+      font-weight: 500;
+      color: #333;
+    }
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+      box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+      transition: background-color 0.3s ease;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+    .btn-success {
+      background-color: #28a745;
+      border-color: #28a745;
+      box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+    }
+    .btn-success:hover {
+      background-color: #218838;
+    }
+    .edit-profile-btn, .edit-address-btn {
+      position: absolute;
+      top: 20px;
+    }
+    .edit-profile-btn {
+      right: 20px;
+    }
+    .edit-address-btn {
+      left: 20px;
+    }
+    .modal-content {
+      border-radius: 10px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+    }
+    .card {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      margin-bottom: 20px;
+      background-color: #fff;
+      padding: 20px;
+    }
+    /* body {
+    padding-top: 80px;
+} */
+.icon-hover-primary:hover {
+  border-color: #3b71ca !important;
+  background-color: white !important;
+}
+
+.icon-hover-primary:hover i {
+  color: #3b71ca !important;
+}
+.icon-hover-danger:hover {
+  border-color: #dc4c64 !important;
+  background-color: white !important;
+}
+
+.icon-hover-danger:hover i {
+  color: #dc4c64 !important;
+}
+  </style>
+</head>
+<body>
+  <!-- Jumbotron -->
+  <div class="p-3 text-center bg-white border-bottom">
+    <div class="container">
+      <div class="row gy-3">
+        <!-- Left elements -->
+        <div class="col-lg-2 col-sm-4 col-4">
+          <a class="navbar-brand" href="#">
+              <span style="color: black">
+                Arabian Food Court
+              </span>
+            </a>
+        </div>
+        <!-- Left elements -->
+
+        <!-- Center elements -->
+        <div class="order-lg-last col-lg-5 col-sm-8 col-8">
+          <div class="d-flex float-end">
+            <!-- <a href="" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center" target="_blank">
+              <i class="fas fa-user-alt m-1 me-md-2"></i>
+              <p class="d-none d-md-block mb-0">Sign in</p>
+            </a> -->
+            <a href="#" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center" target="_blank">
+              <i class="fas fa-heart m-1 me-md-2"></i>
+              <p class="d-none d-md-block mb-0">Wishlist</p>
+            </a>
+            <a href="/getCartPage" class="border rounded py-1 px-3 nav-link d-flex align-items-center" target="_blank">
+              <i class="fas fa-shopping-cart m-1 me-md-2"></i>
+              <p class="d-none d-md-block mb-0">My cart</p>
+            </a>
+          </div>
+        </div>
+        <!-- Center elements -->
+
+        <!-- Right elements -->
+        <div class="col-lg-5 col-md-12 col-12">
+          <div class="input-group float-center">
+            <div class="form-outline">
+              <!-- <input type="search" id="form1" class="form-control" />
+              <label class="form-label" for="form1">Search</label> -->
+            </div>
+            <!-- <button type="button" class="btn btn-primary shadow-0">
+              <i class="fas fa-search"></i>
+            </button> -->
+          </div>
+        </div>
+        <!-- Right elements -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Breadcrumb -->
+  <div class="bg-light">
+    <div class="container py-4">
+      <nav class="d-flex">
+        <h6 class="mb-0">
+          <a href="/login" class="btn btn-primary">Home</a>
+          <span class="btn btn-outline-secondary mx-2">></span>
+          <a href="" class="btn btn-outline-secondary"><u>My Profile</u></a>
+        </h6>
+      </nav>
+    </div>
+  </div>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="profile-header text-center">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item text-center">
+                <a href="#" class="btn btn-outline-primary" style="text-decoration: none; font-weight: bold; margin-left: 60%;" data-bs-toggle="modal" data-bs-target="#addAddresModal">
+                    <i class="bi bi-plus-circle"></i> Add Address
+                </a>
+            </li>
+        </ul>
+          <img src="/images/profile.png" alt="User Image" class="profile-picture mb-3">
+          <h5>Edit Options</h5>
+          <ul class="list-group list-group-flush">
+            <a href="" style="text-decoration: none; font-weight: bold;" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</a>
+            <a href="" style="text-decoration: none; font-weight: bold;" data-bs-toggle="modal" data-bs-target="#editAddressModal">Edit Address</a>
+            <a href="" style="text-decoration: none; font-weight: bold;" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Change Password</a>
+          </ul>
+          <% address.forEach(addr => { %>
+          <h3 class="mb-0"><%= addr.userId.name %></h3>
+            <p class="text-muted"><%= addr.userId.email %></p>
+        </div>
+        <div class="card mt-5">
+          <h5>Personal Details</h5>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Username:</strong> <%= addr.userId.name %></li>
+            <li class="list-group-item"><strong>Email:</strong> <%= addr.userId.email %></li>
+            <li class="list-group-item"><strong>Phone Number:</strong> <%= addr.phone %></li>
+          </ul>
+          <h5>Address Details</h5>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Full Name:</strong> <%= addr.fullName %></li>
+            <li class="list-group-item"><strong>Street Address:</strong> <%= addr.streetAddress %></li>
+            <li class="list-group-item"><strong>Phone Number:</strong> <%= addr.phone %></li>
+            <li class="list-group-item"><strong>Country:</strong> <%= addr.country %></li>
+            <li class="list-group-item"><strong>State:</strong> <%= addr.state %></li>
+            <li class="list-group-item"><strong>City:</strong> <%= addr.city %></li>
+            <li class="list-group-item"><strong>Zip Code:</strong> <%= addr.zipCode %></li>
+          </ul>
+          
+          
+        </div>
+        <div class="card mt-4">
+          <h5>Account Details</h5>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Status:</strong> Active</li>
+            <li class="list-group-item"><strong>Member Since:</strong> <%= addr.createdAt.toLocaleString() %></li>
+          </ul>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Profile Modal -->
+  <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/update-profile" method="POST">
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" name="username" value="Shafeeq" required>
+            </div>
+            <div class="mb-3">
+              <label for="phoneNumber" class="form-label">Phone Number</label>
+              <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" value="9895089017" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Address Modal -->
+  <div class="modal fade" id="addAddresModal" tabindex="-1" aria-labelledby="addAddresModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addAddresModal">Add Address</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="#" method="POST" enctype="multipart/form-data">
+              <div class="mb-3">
+                  <label for="fullName" class="form-label">Full Name</label>
+                  <input type="text" class="form-control" id="name" required>
+              </div>
+              <div class="mb-3">
+                  <label for="streetAddress" class="form-label">Street Address</label>
+                  <input type="text" class="form-control" id="address" required>
+              </div>
+              <div class="mb-3">
+                  <label for="phoneNumber" class="form-label">Phone Number</label>
+                  <input type="text" class="form-control" id="phoneNumber" required>
+              </div>
+              <div class="mb-3">
+                  <label for="city" class="form-label">City</label>
+                  <input type="text" class="form-control" id="city" required>
+              </div>
+              <div class="mb-3">
+                  <label for="state" class="form-label">State</label>
+                  <input type="text" class="form-control" id="state" required>
+              </div>
+              <div class="mb-3">
+                  <label for="country" class="form-label">Country</label>
+                  <input type="text" class="form-control" id="country" required>
+              </div>
+              <div class="mb-3">
+                  <label for="zipCode" class="form-label">Zip Code</label>
+                  <input type="text" class="form-control" id="zipCode" required>
+              </div>
+              <button type="button" class="btn btn-primary w-100" onclick="addAddress()">Save Changes</button>
+          </form>
+      </div>      
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Address Modal -->
+  <div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="editAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editAddressModalLabel">Edit Address</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editAddressForm">
+            <!-- Hidden field for address ID -->
+            <input type="hidden" id="addressId" name="addressId">
+  
+            <div class="mb-3">
+              <label for="fullName" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="fullName" name="fullName" required>
+            </div>
+            <div class="mb-3">
+              <label for="streetAddress" class="form-label">Street Address</label>
+              <input type="text" class="form-control" id="streetAddress" name="streetAddress" required>
+            </div>
+            <div class="mb-3">
+              <label for="country" class="form-label">Country</label>
+              <input type="text" class="form-control" id="country" name="country" required>
+            </div>
+            <div class="mb-3">
+              <label for="city" class="form-label">City</label>
+              <input type="text" class="form-control" id="city" name="city" required>
+            </div>
+            <div class="mb-3">
+              <label for="state" class="form-label">State</label>
+              <input type="text" class="form-control" id="state" name="state" required>
+            </div>
+            <div class="mb-3">
+              <label for="zipCode" class="form-label">Zip Code</label>
+              <input type="text" class="form-control" id="zipCode" name="zipCode" required>
+            </div>
+            <div class="mb-3">
+              <label for="phone" class="form-label">Phone</label>
+              <input type="text" class="form-control" id="phone" name="phone" required>
+            </div>
+            <button type="button" class="btn btn-primary w-100" onclick="editAddress()">Save Changes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="#" method="POST">
+            <div class="mb-3">
+              <label for="oldpassword" class="form-label">Old Password</label>
+              <input type="text" class="form-control" id="oldpassword" name="oldpassword" value="123456" required>
+            </div>
+            <div class="mb-3">
+              <label for="newPassword" class="form-label">New Password</label>
+              <input type="text" class="form-control" id="newPassword" name="newPassword" value="654123" required>
+            </div>
+            <div class="mb-3">
+              <label for="confirmNewPassword" class="form-label">Confirm New Password</label>
+              <input type="text" class="form-control" id="confirmNewPassword" name="confirmNewPassword" value="654123" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/jquery-3.4.1.min.js"></script>
+  <!-- popper js -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <!-- bootstrap js -->
+  <script src="/js/bootstrap.js"></script>
+  <!-- owl slider -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+  </script>
+  <!-- isotope js -->
+  <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
+  <!-- nice select -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+  <!-- custom js -->
+  <script src="/js/custom.js"></script>
+  <!-- Google Map -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- End Google Map --> 
+
+  <script>
+    async function addAddress() {
+    const fullName = document.getElementById('name').value.trim();
+    const streetAddress = document.getElementById('address').value.trim();
+    const phone = document.getElementById('phoneNumber').value.trim();
+    const city = document.getElementById('city').value.trim();
+    const zipCode = document.getElementById('zipCode').value.trim(); 
+    const state = document.getElementById('state').value.trim();
+    const country = document.getElementById('country').value.trim();
+
+    const phonePattern = /^(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/;
+
+    // Validation for required fields
+    if (!fullName || !streetAddress || !phone || !city || !zipCode || !state || !country) {
+        Swal.fire({
+            title: "Error",
+            text: "All fields must be filled",
+            icon: "error",
+            confirmButtonText: "Okay"
+        });
+        return;
+    }
+
+    // Limit street address to 30 words
+    if (streetAddress.trim().split(/\s+/).length > 30) {
+        Swal.fire({
+            title: 'Error',
+            text: "Only 30 words allowed for street address",
+            icon: "error",
+            confirmButtonText: "Okay"
+        });
+        return;
+    }
+
+    // Validate phone number format
+    if (!phonePattern.test(phone)) {
+        Swal.fire({
+            title: 'Error',
+            text: "Invalid phone number format",
+            icon: "error",
+            confirmButtonText: "Okay"
+        });
+        return;
+    }
+
+    // Validate zip code length and ensure no spaces
+    if (zipCode.length < 6 || /\s/.test(zipCode)) {
+        Swal.fire({
+            title: 'Error',
+            text: "Zip code must be at least 6 characters and contain no spaces",
+            icon: "error"
+        });
+        return;
+    }
+
+    try {
+        const response = await fetch('/addAddress', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ fullName, streetAddress, phone, city, zipCode, state, country })
+        });
+
+        if (response.ok) {
+            Swal.fire({
+                title: 'Address Added!',
+                text: 'The new address was added successfully.',
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false
+            }).then(() => {
+                location.reload();
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Failed!',
+                text: 'Failed to add the address. Please try again.',
+            });
+        }
+    } catch (error) {
+        console.error('Error while adding address', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'An unexpected error occurred while adding the address.',
+        });
+    }
+}
+
+async function editAddress() {
+    const form = document.getElementById('editAddressForm');
+    const addressId = form.addressId.value; // Hidden field for address ID
+    const fullName = form.fullName.value.trim();
+    const streetAddress = form.streetAddress.value.trim();
+    const phone = form.phone.value.trim();
+    const country = form.country.value.trim();
+    const city = form.city.value.trim();
+    const state = form.state.value.trim();
+    const zipCode = form.zipCode.value.trim();
+
+    // Validation logic
+    if (!fullName || !streetAddress || !phone || !country || !city || !state || !zipCode) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing Fields',
+        text: 'Please fill in all fields.',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+
+    if (fullName.length < 2 || fullName.length > 10) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Name Length',
+        text: 'Name must be between 2 and 10 characters.',
+        showConfirmButton: true
+      });
+      return;
+    }
+
+    const nameRegex = /^[a-zA-Z\s\-]+$/;
+
+    if (!nameRegex.test(fullName)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Characters in Name',
+        text: 'Name should not contain numbers or special characters.',
+        showConfirmButton: true
+      });
+      return;
+    }
+
+    // Additional validations...
+
+    // Send the form data via fetch to the backend
+    const response = await fetch('/user/edit_Address', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: addressId, fullName, streetAddress, phone, city, zipCode, state, country })
+    });
+
+    if (response.ok) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Address Updated',
+        text: 'The address has been successfully updated.',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        location.reload(); // Reload the page to reflect changes
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Update Failed',
+        text: 'Unable to update the address. Please try again later.',
+        confirmButtonText: 'OK'
+      });
+    }
+  }
+
+  </script>
+</body>
+</html>
