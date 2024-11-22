@@ -14,7 +14,7 @@ const couponSchema = mongoose.Schema({
         type: Date,
         required: true
     },
-    expiry_date: {  // Fixed the typo here
+    expiry_date: {  
         type: Date,
         required: true
     },

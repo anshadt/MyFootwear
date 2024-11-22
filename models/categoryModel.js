@@ -15,7 +15,11 @@ const categorySchema = mongoose.Schema({
     isDeleted: {
         type: Boolean,
         default: false
-    }
+    },
+    saleCount:{
+        type:Number,
+        default:0
+    },
 }, {
     timestamps: true
 });

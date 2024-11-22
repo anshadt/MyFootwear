@@ -20,7 +20,7 @@
       background-color: #34495e;
     }
     .profile-header {
-      background-color: #00bcd4; /* Teal 300 */
+      background-color: #00bcd4; 
       color: white;
       padding: 20px;
       text-align: center;
@@ -181,7 +181,7 @@
             <p class="user_proname"><%= user.name %></p>
   
             <div class="dropdown">
-              <button class="btn btn-secondary dropdown-toggle" type="button" id="loginDropdown" data-toggle="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="loginDropdown" data-bs-toggle="dropdown">
                 <i class="fa fa-user" aria-hidden="true"></i>
               </button>
   
@@ -433,7 +433,7 @@
     </div>
   </div>
   <script>
-    // Add Address ............/
+   
     async function addAddress() {
     const fullName = document.getElementById('name').value.trim();
     const streetAddress = document.getElementById('address').value.trim();
@@ -563,7 +563,7 @@ async function editAddress() {
   const state = form.editAddressState.value.trim();
   const zipCode = form.editAddressZipCode.value.trim();
 
-  // Validation
+ 
   if (!fullName || !streetAddress || !phone || !country || !city || !state || !zipCode) {
     Swal.fire({
       icon: 'error',
@@ -574,7 +574,7 @@ async function editAddress() {
     return;
   }
 
-  // Phone number validation
+  
   const phonePattern = /^(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/;
   if (!phonePattern.test(phone)) {
     Swal.fire({
@@ -639,7 +639,7 @@ async function editAddress() {
   }
 }
 
-//Delete Address
+
 function deleteAddress(button, addressId) {
     Swal.fire({
       title: 'Are you sure?',
@@ -687,7 +687,7 @@ function deleteAddress(button, addressId) {
     });
   }
 
-  //Change Password
+  
   async function editChangePassword() {
     const currentPassword = document.getElementById('currentpassword').value.trim();
     const newPassword = document.getElementById('newpassword').value.trim();
@@ -792,7 +792,7 @@ function deleteAddress(button, addressId) {
 </script>
 
 <script>
-// Edit Profile JavaScript
+
 document.getElementById('editProfilebtn').addEventListener('click', function() {
   const userId = this.getAttribute('data-user-id');
   const userName = this.getAttribute('data-user-name');
@@ -803,7 +803,7 @@ document.getElementById('editProfilebtn').addEventListener('click', function() {
   document.getElementById('editEmail').value = userEmail;
 });
 
-// Edit Profile Function
+
 async function editProfile() {
   const form = document.getElementById('editProfileForm');
   const userId = form.userId.value;
@@ -859,16 +859,16 @@ async function editProfile() {
   </script>
   <script>
     function copyReferralCode() {
-        // Get the referral code text
+        
         const referralCode = document.getElementById("referralCode").innerText;
 
-        // Copy to clipboard
+       
         navigator.clipboard.writeText(referralCode).then(() => {
-            // Show copied message
+            
             const copyMessage = document.getElementById("copyMessage");
             copyMessage.style.display = "inline";
 
-            // Hide the message after 2 seconds
+            
             setTimeout(() => {
                 copyMessage.style.display = "none";
             }, 2000);

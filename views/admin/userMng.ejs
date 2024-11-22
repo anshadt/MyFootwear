@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
-        /* Sidebar for large screens */
+        
         .sidebar {
             height: 100vh;
             background-color: #ffbe33;
@@ -26,29 +26,29 @@
             background-color: #071553;
         }
 
-        /* Hide sidebar for small screens */
+        
         @media (max-width: 767px) {
             .sidebar {
                 display: none;
             }
         }
 
-        /* Content padding */
+        
         .content {
             padding: 2rem;
         }
 
-        /* Navbar adjustments */
+        
         .navbar {
             margin-bottom: 0;
         }
 
-        /* Sidebar navigation */
+        
         .navbar-toggler {
             border: none;
         }
 
-        /* Show sidebar in larger screens */
+        
         @media (min-width: 768px) {
             .navbar-collapse {
                 display: none;
@@ -104,7 +104,7 @@
                             <i class="fas fa-user"></i> Admin
                         </a>
                         <div class="dropdown-menu" aria-labelledby="adminDropdown">
-                            <!-- <a class="dropdown-item" href="#">Profile</a> -->
+                           
                             <a class="dropdown-item" href="/admin/logout" id="logoutBtn">Logout</a>
                         </div>
                     </li>
@@ -146,13 +146,9 @@
             <!-- Main Content -->
             <div class="col-md-10 content">
                 <div class="d-flex justify-content-between mb-4">
-                    <!-- <h1>Admin Dashboard</h1> -->
-                    <!-- <form action="/admin/adminPage" method="post" class="d-inline">
-                        <button type="submit" class="btn btn-danger">Back</button>
-                    </form> -->
                 </div>
 
-                <!-- Search Bar -->
+                
                 <div class="mb-4">
                     <form class="form-inline" method="post" action="/admin/search">
                         <input class="form-control mr-2" type="search" placeholder="Search" aria-label="Search" name="search">
@@ -160,11 +156,7 @@
                     </form>
                 </div>
 
-                <!-- Add User Button -->
-                <!-- <div class="mb-4">
-                    <a href="/admin/clickadd" class="btn btn-success">Add User</a>
-                </div> -->
-
+                
                 <!-- User Table -->
                 <table class="table table-striped">
                     <thead>

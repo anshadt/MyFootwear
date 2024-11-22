@@ -52,6 +52,7 @@ adminRouter.post('/cancel-coupon', couponController.cancel_Coupon);
 
 //Sales Report Section 
 adminRouter.post('/generateSalesReport',adminAuth,salesController.generateSalesReport)
+adminRouter.get('/salesChart',adminAuth,salesController.sales_Chart)
 
 //Offer Section 
 adminRouter.get('/offer',adminAuth,offerController.offer)

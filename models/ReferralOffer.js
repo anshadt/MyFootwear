@@ -11,7 +11,7 @@ const referralOfferSchema = new mongoose.Schema({
     },
     isActive: {
         type: Boolean,
-        default: true, // Allows partial deletion (disabling)
+        default: true, 
     }
 });
 

@@ -10,11 +10,11 @@ const applyCoupon = async (req, res) => {
         if (!cart) {
             return res.json({ success: false, message: 'Cart not found' });
         }
-        // Calculate cart total
+       
         const cartTotal = cart.items.reduce((total, item) => {
             return total + (item.product.price * item.quantity);
         }, 0);
-        // Find the coupon
+        
         const coupon = await Coupon.findOne({ 
             coupon_code: couponCode,
             start_date: { $lte: new Date() },
@@ -45,18 +45,18 @@ const applyCoupon = async (req, res) => {
             });
         }
 
-        // Calculate discount
+        
         let discountAmount = (cartTotal * coupon.discount) / 100;
 
-        // Apply max discount limit if applicable
+      
         if (discountAmount > coupon.max_coupon_amount) {
             discountAmount = coupon.max_coupon_amount;
         }
 
-        // Calculate final amount
+        
         const finalAmount = cartTotal - discountAmount;
 
-        // Mark the coupon as used for this user
+        
         if (userCouponUsage) {
             userCouponUsage.isBought = true; 
         } else {
@@ -65,7 +65,7 @@ const applyCoupon = async (req, res) => {
 
         await coupon.save();
 
-        // Update the cart with the applied coupon
+       
         cart.appliedCoupon = coupon._id;
         cart.discountAmount = discountAmount;
         await cart.save();

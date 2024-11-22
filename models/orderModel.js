@@ -1,3 +1,4 @@
+
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
@@ -67,16 +68,24 @@ const orderSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    walletUsage: {
+        type: Number, 
+        default: 0,
+      },
+      remainingAmount: {
+        type: Number, 
+        default: 0,
+      },
     orderStatus: {
         type: String,
         required: true,
-        default:'Pending',
-        enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled','Returned']
+        default: 'Pending',
+        enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled', 'Returned']
     },
     paymentStatus:{
         type:String,
         default:'Pending',
-        enum:['Pending','Paid','Failed']
+        enum:['Pending','Paid','Failed','Returned']
     },
     orderStatusTimestamps: {
         pending: { type: Date },
@@ -84,6 +93,9 @@ const orderSchema = new mongoose.Schema({
         shipped: { type: Date },
         delivered: { type: Date },
         cancelled: { type: Date }
+    },
+    returnRequestDate: {
+        type: Date, 
     },
     placedAt: {
         type: Date,
@@ -99,10 +111,11 @@ const orderSchema = new mongoose.Schema({
     invoiceNumber: {
         type: String,
         unique: true
-    },
-    returnRequestDate: {
-        type: Date, 
-    }
+    },deliveredDate: { type: Date },
+    createdAt: {
+        type: Date,
+        default: Date.now
+      },
 
     
 }, { timestamps: true });

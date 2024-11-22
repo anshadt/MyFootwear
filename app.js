@@ -23,7 +23,7 @@ app.set('views',path.join(__dirname,'views'))
 app.use(express.static('public'))
 
 app.use(session({
-    secret:'yourSecretKey',
+    secret:process.env.SESSION_SECRET,
     resave:false,
     saveUninitialized:true,
     cookie:{
@@ -45,6 +45,14 @@ app.use(cookieParser());
 app.use('/',userRouter);
 app.use('/admin',adminRouter)
 app.use('/auth',googleRouter)
+
+// app.use((err, req, res, next) => {
+//     console.error(err.stack); 
+//     res.status(err.status || 500).json({
+//         success: false,
+//         message: err.message || 'Internal Server Error',
+//     });
+// });
 
 
   

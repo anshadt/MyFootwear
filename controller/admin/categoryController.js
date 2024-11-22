@@ -23,28 +23,6 @@ const load_CategoryPage=async(req,res)=>{
     }
 }
 
-
-// const load_CategoryPage = async(req,res)=>{
-//     try {
-//         const page = parseInt(req.query.page) || 1;
-//         const limit = 4;
-//         const skip = (page-1)*limit;
-
-//         const categoryData = await category.sort({createdAt:-1}).skip(skip).limit(limit);
-//         const tc = await category.countDocuments();
-//         const tp = Math.ceil(totalCategories / limit);
-//         res.render('admin/categoryPage',{
-//             cat:categoryData,
-//             currentPage:page,
-//             totalPages:tp,
-//             totalCategories: tc
-//         })
-//     } catch (error) {
-//         console.error(error)
-//         res.redirect('/admin/admin_Dashboard')
-//     }
-// }
-
 // Add Category Section
 const add_Category=async(req,res)=>{
     try {
@@ -72,29 +50,6 @@ const add_Category=async(req,res)=>{
     }
 }
 
-// const add_Category = async (req,res)=>{
-//     const { name,discription} = req.body
-//     try {
-//         const existCat = await category.findOne({name})
-//         if(existCat){
-//             return res.status(400).json({error:"category already exists"})
-            
-//         }
-//         const newcategory = new category({
-//             name,
-//             discription
-//         })
-//         await newcategory.save()
-//         returnres.json({message:"Category added sucessfully"})
-//     } catch (error) {
-//         return res.status(500).json({error:"internal server Error"})
-//     }
-// }
-
-//Edit Category Section
-
-
-
 const edit_Category = async (req, res) => {
     try {
       const { id } = req.params;
@@ -105,7 +60,7 @@ const edit_Category = async (req, res) => {
         return res.status(404).json({ success: false, message: 'Category not found' });
       }
       const existCat = await category.findOne({ category_name: upperCaseName });
-      // Check if a category with the new name already exists
+      
       if (existCat && existCat._id.toString() !== id) {
         return res.status(400).json({ success: false, message: 'Category name already exists' });
       }

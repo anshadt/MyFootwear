@@ -281,9 +281,9 @@
                         </div>
                     </div>
                 </div>
-                <!-- Add Offer Card End--1 -->
+               
 
-                <!-- Products Card Start--2 -->
+                
                 <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                     <div class="row row-cols-1 row-cols-md-3 g-4">
                         <% product.forEach(Product => { %>
@@ -310,9 +310,7 @@
                         <% }) %>
                       </div>
                 </div>
-                <!-- Products Card End--2 -->
-
-                <!-- Categories Card Start--3 -->
+                
                 <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
                     <div class="row row-cols-1 row-cols-md-3 g-4">
                         <div class="col">
@@ -350,11 +348,11 @@
                         </tbody>
                       </table>
                 </div>
-                <!-- Categories Card End--3 -->
+               
               </div>
         </main>
     
-        <!-- Edit Modal -->
+        
         <div class="modal fade" id="editOfferModal" tabindex="-1" aria-labelledby="editOfferModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -395,7 +393,7 @@
  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
  <script>
-    //Add Offer-----------Start
+    
     async function AddOffer() {
         const Toast = Swal.mixin({
           toast: true,
@@ -527,11 +525,7 @@
           });
         }
       }
-      //Add Offer-----------End
-
-     
-
-      //Edit Offer-----------Start
+      
       document.addEventListener("DOMContentLoaded", () => {
       const editBtns = document.querySelectorAll('.editOfferBtn'); 
       editBtns.forEach((button) => {
@@ -684,9 +678,7 @@
 
         }
 
-        //Edit Offer----------End
-
-        //Delete Offer-----------Start
+        
         function deleteItem(OfferId) {
     Swal.fire({
         title: 'Are you sure?',
@@ -733,9 +725,7 @@
         }
     });
 }
- //Delete Offer-----------End
-
-  //Restore Offer-----------Start
+ 
 function restoreOffer(offerId) {
     Swal.fire({
         title: 'Are you sure?',
@@ -782,11 +772,7 @@ function restoreOffer(offerId) {
         }
     });
 }
-//Restore Offer-----------End
 
-
-
-    //Apply Offer-----------Start
      async function updateProductOffer(productId,offerId){
         try{
           const responce = await fetch('/admin/updateProductOffer',{
@@ -818,7 +804,7 @@ function restoreOffer(offerId) {
           Swal.fire('Error!', 'There was a problem processing your request.', 'error');
         }
     }
-    //Apply Offer-----------End
+    
 </script>
 
 <%- include('../../views/partials/adminFooter') %>

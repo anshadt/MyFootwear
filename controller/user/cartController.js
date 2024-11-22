@@ -6,7 +6,8 @@ const Cart=require('../../models/cartModel')
 const mongoose = require('mongoose')
 const Wishlist=require('../../models/wishlistModel')
 const Order = require('../../models/orderModel');
-const Coupon = require('../../models/couponModel'); 
+const Coupon = require('../../models/couponModel');
+const Wallet =require('../../models/walletModel') 
 
 
 //Get Cart Page
@@ -80,57 +81,6 @@ const postCart_Page = async (req, res) => {
     res.status(500).json({ success: false, message: "Something went wrong!" });
   }
 };
-
-// cartController.js
-
-// const applyReferralCode = async (req, res) => {
-//   try {
-//     const { referralCode } = req.body;
-//     const user = await User.findById(req.session.userId);
-    
-    
-//     if (user.hasUsedReferral) {
-//       return res.status(400).json({ success: false, message: 'Referral code has already been used.' });
-//     }
-
-//     const referral = await user.findOne({ code: referralCode });
-
-//     if (!referral) {
-//       return res.status(400).json({ success: false, message: 'Invalid referral code.' });
-//     }
-
-//     const cart = await Cart.findOne({ user: req.session.userId }).populate('items.product');
-//     let discountAmount = 0;
-
-//     if (cart) {
-//       const totalAmount = cart.total_price;
-//       discountAmount = (totalAmount * referral.discount) / 100;
-      
-      
-//       cart.discountAmount = discountAmount;
-//       cart.totalAmount = totalAmount - discountAmount;
-      
-      
-//       await cart.save();
-//     }
-
-    
-//     user.hasUsedReferral = true;
-//     await user.save();
-
-    
-//     res.status(200).json({
-//       success: true,
-//       message: 'Referral code applied successfully.',
-//       cart,
-//       discountAmount,
-//     });
-//   } catch (error) {
-//     console.error('Error applying referral code:', error);
-//     res.status(500).json({ success: false, message: 'Error applying referral code.' });
-//   }
-// };
-
 
 const removeCartItem = async (req, res) => {
   try {
@@ -246,7 +196,9 @@ const checkOutPage= async(req,res)=>{
             isDeleted: false,
             'users.userId': { $ne: user }
         }).lean();
-    res.render('user/checkOutPage',{cart,address,wishlistCount,cartCount,user,availableCoupons})
+        let charges = 50;
+        let wallet = await Wallet.findOne({user: user._id})
+    res.render('user/checkOutPage',{cart,address,wishlistCount,cartCount,user,availableCoupons,charges,wallet})
 } catch (error) {
     console.error('Error fetching cart:', error); 
 res.status(500).send('Something went wrong!');

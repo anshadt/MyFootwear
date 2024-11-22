@@ -64,6 +64,10 @@ const generateSalesReport = async (req, res) => {
 };
 
 
+
+
+
+
 function generatePDFReport(data) {
     return new Promise((resolve, reject) => {
         const doc = new PDFDocument({ margin: 50, size: 'A4' });
@@ -75,14 +79,14 @@ function generatePDFReport(data) {
             resolve(pdfData);
         });
 
-        // Title and Header
+        
         doc.fontSize(22).fillColor('#333').text('Sales Report', { align: 'center', underline: true });
         doc.moveDown(2);
 
-        // Divider
+       
         generateHr(doc, doc.y + 10);
 
-        // Sales Information
+      
         doc.fontSize(14).fillColor('#000').text('Summary:', { underline: true });
         doc.moveDown(1);
         
@@ -109,7 +113,7 @@ function generatePDFReport(data) {
 
         generateHr(doc, doc.y + 20);
 
-        // Detailed Order Section
+        
         doc.fontSize(14).fillColor('#000').text('Detailed Order List:', { underline: true });
         doc.moveDown(1);
 
@@ -119,7 +123,7 @@ function generatePDFReport(data) {
                .text(`Order ID: ${order.orderId}`, 50, doc.y)
                .text(`Order Date: ${new Date(order.orderDate).toLocaleDateString()}`, 400, doc.y - 12, { align: 'right' });
             doc.moveDown(0.5);
-            doc.text(`User: ${order.userName}`, 50, doc.y); // Add this line
+            doc.text(`User: ${order.userName}`, 50, doc.y); 
             doc.moveDown(0.5);
 
             // Table header
@@ -168,19 +172,18 @@ function generatePDFReport(data) {
             doc.moveDown(2);
         }
 
-        // Footer
+        
         const footerPosition = doc.page.height - 50;
         doc.fontSize(10).fillColor('#888')
            .text('Generated on: ' + new Date().toLocaleDateString(), 50, footerPosition, { align: 'center', width: 500 });
         
         doc.fontSize(10).text('Thank you for your business!', { align: 'center', width: 500 });
 
-        // Finalize PDF file
+        
         doc.end();
     });
 }
 
-// Helper function to draw a horizontal line
 function generateHr(doc, y) {
     doc.strokeColor('#aaaaaa')
         .lineWidth(1)
@@ -241,8 +244,78 @@ function calculateReportData(orders) {
 }
 
 
+const sales_Chart = async (req, res) => {
+    try {
+      const { chartType } = req.query; 
+
+      let aggregationPipeline = [];
+
+      if (chartType === 'yearly') {
+        aggregationPipeline = [
+          {
+            $group: {
+              _id: { $year: "$createdAt" },  
+              orderCount: { $sum: 1 }
+            }
+          },
+          {
+            $project: {
+              year: "$_id",
+              orderCount: 1,
+              _id: 0
+            }
+          },
+          { $sort: { year: -1 } },  
+          { $limit: 5 },  
+          { $sort: { year: 1 } } 
+        ];
+      } else {
+        // Default to monthly aggregation
+        aggregationPipeline = [
+          {
+            $group: {
+              _id: { $month: "$createdAt" }, 
+              orderCount: { $sum: 1 }
+            }
+          },
+          {
+            $project: {
+              month: {
+                $let: {
+                  vars: {
+                    monthsInString: [, 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+                  },
+                  in: {
+                    $arrayElemAt: ['$$monthsInString', '$_id']
+                  }
+                }
+              },
+              orderCount: 1,
+              _id: 0
+            }
+          },
+          { $sort: { _id: -1 } }, 
+          { $limit: 5 },  
+          { $sort: { _id: 1 } } 
+        ];
+      }
+
+      // Perform aggregation query with the dynamic pipeline
+      const orderData = await Order.aggregate(aggregationPipeline);
+
+      res.json(orderData);
+    } catch (error) {
+      console.error('Error fetching order data:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+
+
+
 
 module.exports ={
-    generateSalesReport
-}
+    generateSalesReport,
+    sales_Chart
 
+}

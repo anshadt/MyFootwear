@@ -240,27 +240,6 @@
             <!-- Main Content -->
             <div class="col-md-10 content">
                 <div class="d-flex justify-content-between mb-4"></div>
-                <!-- Search Bar -->
-                <!-- <div class="mb-4">
-                    <form class="form-inline" method="post" action="#">
-                        <select class="form-select custom-select" aria-label="Default select example">
-                            <option selected disabled>Select Order Id</option>
-                            <% orders.forEach(order => { %>
-                            <option value="1"><%= order.orderId %></option>
-                            <% }); %>
-                        </select>
-                        <select class="form-select custom-select" aria-label="Default select example">
-                            <option selected disabled>Select Type</option>
-                            <option value="1">Processing</option>
-                            <option value="2">Shipped</option>
-                            <option value="3">Delivered</option>
-                            <option value="3">Cancel</option>
-                        </select>
-                        <button class="btn btn-primary" type="submit">Submit</button>
-                    </form>
-                </div> -->
-                <!-- User Table -->
-
                 <div class="container mt-4">
     <h2>Order Management</h2>
     <table class="table table-striped">
@@ -285,15 +264,17 @@
                     <td><%= order.paymentMethod %></td>
                     
                     <td>
-                        <select class="form-control status-select" data-order-id="<%= order._id %>" <%= order.orderStatus === 'Cancelled' ? 'disabled' : '' %>>
+                        <!-- <select class="form-control status-select" data-order-id="<%= order._id %>" <%= order.orderStatus === 'Cancelled' ? 'disabled' : '' %>> -->
+                            <select class="form-control status-select" data-order-id="<%= order._id %>" <%= (order.orderStatus === 'Cancelled' || order.orderStatus === 'Returned') ? 'disabled' : '' %>>
                             <option value="Pending" <%= order.orderStatus === 'Pending' ? 'selected' : '' %>>Pending</option>
                             <option value="Processing" <%= order.orderStatus === 'Processing' ? 'selected' : '' %>>Processing</option>
                             <option value="Shipped" <%= order.orderStatus === 'Shipped' ? 'selected' : '' %>>Shipped</option>
                             <option value="Delivered" <%= order.orderStatus === 'Delivered' ? 'selected' : '' %>>Delivered</option>
                             <option value="Cancelled" <%= order.orderStatus === 'Cancelled' ? 'selected' : '' %> <%= order.orderStatus === 'Cancelled' ? 'disabled' : '' %>>Cancelled</option>
+                            <option value="Returned" <%= order.orderStatus === 'Returned' ? 'selected' : '' %> disabled>Returned</option>
+    
                         </select>
                     </td>
-                    
                     <td>
                         <a href="/admin/orders/<%= order._id %>" class="btn btn-info btn-sm">View Details</a>
                     </td>
@@ -365,7 +346,7 @@
                             showConfirmButton: false,
                         });
 
-                        // Disable the select element if the order is cancelled
+                        
                         if (status === 'Cancelled') {
                             this.disabled = true;
                         }
@@ -387,7 +368,7 @@
             });
         });
 
-        // Function to check and update cancelled orders on page load
+       
         function updateCancelledOrders() {
             document.querySelectorAll('.status-select').forEach(select => {
                 if (select.value === 'Cancelled') {
@@ -396,7 +377,7 @@
             });
         }
 
-        // Call the function when the page loads
+        
         window.addEventListener('load', updateCancelledOrders);
     </script>
     

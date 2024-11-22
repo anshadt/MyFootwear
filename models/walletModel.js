@@ -16,7 +16,7 @@ const walletSchema = mongoose.Schema({
         {
           date: {
             type: Date,
-            //required: true,
+            required: true,
             default: Date.now
           },
           amount: {
@@ -25,18 +25,18 @@ const walletSchema = mongoose.Schema({
           },
           referralId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User', // Stores the referrer or referred user ID
-           // default: null
+            ref: 'User',
+            default: null
         },
         
           description: {
             type: String,
-            //required: true
+            required: true
           },
           
           transactionType: {
             type: String,
-            //required: true,
+            required: true,
             enum: ['credited', 'debited']
           }
         }

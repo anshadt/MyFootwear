@@ -160,16 +160,6 @@
     <!-- Collapsible content -->
     <div class="collapse navbar-collapse" id="navbarContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <!-- Offer Products dropdown -->
-        <!-- <li class="nav-item dropdown me-lg-4">
-          <a class="nav-link dropdown-toggle text-white" href="#" id="offerProductsDropdown" role="button" 
-             data-bs-toggle="dropdown" aria-expanded="false">Offer Products</a>
-          <ul class="dropdown-menu" aria-labelledby="offerProductsDropdown">
-            <li><a class="dropdown-item" href="#">15% Offer</a></li>
-            <li><a class="dropdown-item" href="#">20% Offer</a></li>
-            <li><a class="dropdown-item" href="#">25% Offer</a></li>
-          </ul>
-        </li> -->
 
         <!-- Sort Items dropdown -->
         <li class="nav-item dropdown me-lg-4">
@@ -200,13 +190,13 @@
       <!-- Search bar -->
       <form class="d-flex mx-auto" style="width: 40%;" onsubmit="return performSearch()">
         <div class="input-group">
-            <!-- Set the input value to the search term, if available -->
+            
             <input class="form-control border-0" id="searchInput" type="search" 
                    placeholder="Search for items..." aria-label="Search" 
                    style="background-color: #f8f9fa; border-radius: 20px 0 0 20px;"
                    value="<%= searchParams.search %>" oninput="toggleClearButton()">
     
-            <!-- Clear button, initially hidden, shown based on input content -->
+           
             <button type="button" class="btn btn-light border-0" id="clearButton" 
                     style="display: none; position: absolute; right: 3.5rem; z-index: 1;" 
                     onclick="clearSearch()">
@@ -231,14 +221,14 @@
       <div class="heading_container heading_center">
         <a style="color: black;" data-toggle="tooltip" data-placement="bottom" title="Refresh" href="/userHomePage"><h2>Choose Category Menu</h2></a>
       </div>
-      <!-- Categories List -->
+     
       <ul class="filters_menu">
         <li data-toggle="tooltip" data-placement="bottom" title="All" class="active" data-filter="*" onclick="filterSelection('all')">All</li>
         <% Category.forEach(category => { %>
           <li data-toggle="tooltip" data-placement="bottom" title="<%= category.category_name %>" data-filter="<%= category._id %>" onclick="filterSelection('<%= category._id %>')"><%= category.category_name %></li>
         <% }); %>
       </ul>
-      <!-- Products List -->
+      
       <div class="filters-content">
         <div class="row grid">
           <% if (products.length > 0) { %>
@@ -247,7 +237,7 @@
                 <div class="box">
                   <div>
                     <div class="img-box position-relative">
-                      <!-- Offer Percentage Badge -->
+                      
                       <% if(product.offer) { %>
                         <div class="offer-badge position-absolute" style="top: 10px; right: 10px; background-color: rgba(255, 0, 0, 0.8); color: #fff; padding: 5px 8px; border-radius: 5px; font-size: 0.8em;">
                           <%= product.offer.offerPercentage %>% OFF
@@ -276,13 +266,13 @@
                       <p><%= product.description %></p>
                       <span class="text-warning">★ ★ ★ ★ ☆</span> (4.5)
                       <div class="d-flex">
-                        <!-- Add to Cart Button -->
+                        
                         <div class="btn btn-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
                           <a id="addToCart" href="#" onclick="addToCart('<%= product._id %>')" class="text-white">
                             <i data-toggle="tooltip" data-placement="bottom" title="Add To Cart" class="bi bi-cart-fill"></i>
                           </a>
                         </div>
-                        <!-- Wishlist Button -->
+                        
                         <div class="d-flex ml-3">
                           <a href="#" onclick="addToWishlist('<%= product._id %>')" class="btn btn-danger btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
                             <i data-toggle="tooltip" data-placement="bottom" title="Add To Wishlist" class="bi bi-heart-fill"></i>
@@ -299,7 +289,7 @@
         </div>
       </div>
 
-      <!-- Add this section after the product grid -->
+      
       <div id="noProductsMessage" class="col-12 text-center mt-3 " style="display: none;">
         <p>No products found.</p>
       </div>
@@ -330,11 +320,6 @@
           <% } %>
         </ul>
       </nav>
-
-      <!-- Remove the "View More" button as it's no longer needed -->
-      <!-- <div class="btn-box">
-        <a href="#">View More</a>
-      </div> -->
     </div>
   </section>
 
@@ -434,7 +419,7 @@
  
  
   <script>
-    // Filter function for product categories
+    
     function filterSelection(categoryId) {
       const allProducts = document.querySelectorAll('.all');
       let visibleProducts = 0;
@@ -447,7 +432,7 @@
         }
       });
       
-      // Show or hide the "No products found" message
+      
       const noProductsMessage = document.getElementById('noProductsMessage');
       noProductsMessage.style.display = visibleProducts === 0 ? 'block' : 'none';
     }
@@ -493,7 +478,7 @@ function clearSearch() {
     const searchInput = document.getElementById('searchInput');
     searchInput.value = '';
     toggleClearButton();
-    window.location.href = '/userHomePage';  // Redirect to the default product list
+    window.location.href = '/userHomePage';  
 }
   </script>
 

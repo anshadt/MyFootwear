@@ -45,6 +45,7 @@ const getOrderDetails = async (req, res) => {
 const updateOrderStatus = async (req, res) => { 
     try {
         const { orderId, status } = req.body;
+        
 
         const order = await Order.findById(orderId).populate('items.product');
         
@@ -61,6 +62,7 @@ const updateOrderStatus = async (req, res) => {
         }
         if(status === 'Delivered'){
             order.paymentStatus = 'Paid';
+            order.deliveredDate = new Date();
         }
 
         if(status === 'Cancelled'){
@@ -85,8 +87,16 @@ const updateOrderStatus = async (req, res) => {
                     await wallet.save();
             }
         }
+        if (order.orderStatus === 'Returned') {
+            return res.status(400).json({ message: "Cannot modify a returned order" });
+        }
+
+        
+        
+        
 
         order.orderStatus = status;
+        order.orderStatusTimestamps[status.toLowerCase()] = new Date();
         const updatedOrder = await order.save();
         
         res.json({ success: true, message: 'Order status updated successfully', order: updatedOrder });
@@ -95,6 +105,7 @@ const updateOrderStatus = async (req, res) => {
         res.status(500).json({ success: false, message: 'Failed to update order status' });
     }
 };
+
 
 module.exports = {
     loard_OrderMng,

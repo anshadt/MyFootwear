@@ -1,39 +1,46 @@
 const admin=require('../../routes/admin')
 const user=require('../../models/userModel')
 const bcrypt=require('bcrypt')
-const Order = require('../../models/orderModel')
+const Order=require('../../models/orderModel')
+const Product = require('../../models/productModel')
+const Category=require('../../models/categoryModel')
 
 //Admin Login Page Loading
-const load_AdminPage=(req,res)=>{
-    //res.render("admin/adminLogin")
-    try {
-      res.render("admin/adminLogin")
-    } catch (error) {
-      console.log("Login error: " + error);
-          return res.status(500).send('An error occurred during login');
-    }
+const load_AdminPage=async(req,res)=>{
+try {
+  res.render("admin/adminLogin")
+} catch (error) {
+  console.log("Login error: " + error);
+      return res.status(500).send('An error occurred during login');
+}
+   
 }
 
 //Admin Dashboard Page Loading
-const load_AdminDash = async(req,res)=>{
-  try {
-    const orders=await Order.find({}).sort({createdAt:-1}).limit(5)
-      if(req.session.isAdmin){
-          res.render('admin/admin_Dashboard',{orders,title:'Admin Dashboard'})
-      }else{
-          return res.redirect('/admin/adminLogin')
-      }
-  } catch (error) {
-    console.log("Login error: " + error);
-    return res.status(500).send('An error occurred during login');
-  }
+const load_AdminDash=async(req,res)=>{
+    try {
+      const category = await Category.find({}).sort({saleCount:-1}).limit(10)
+      const product=await Product.find({}).sort({saleCount:-1}).limit(10)
+      const orders=await Order.find({}).sort({createdAt:-1}).limit(5)
+        if(req.session.isAdmin){
+            res.render('admin/admin_Dashboard',{orders,product,category,title:'Admin Dashboard'})
+        }else{
+            return res.redirect('/admin/login')
+        }
+    } catch (error) {
+      console.log("Login error: " + error);
+      return res.status(500).send('An error occurred during login');
+    }
 }
+
+
 
 //Admin Dashboard
 const admin_Dashboard = async (req, res) => {
     try {
       const { email, Password } = req.body;
       const findAdmin = await user.findOne({ email: email });
+      
    
       
       if (!findAdmin) {
@@ -59,22 +66,34 @@ const admin_Dashboard = async (req, res) => {
   
 
 //User Manage Page Loading
-const load_userMng=async(req,res)=>{
-    try {
-          const userdata = await user.find({ isAdmin: false });
-          res.render("admin/userMng", { userdata, title: "userMng" });
-       
-      } catch (error) {
-        console.log(error);
-      }
-} 
+const load_userMng = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 6;
+    const skip = (page - 1) * limit;
+    const totalUser = await user.countDocuments({ isAdmin: false });
+    const totalPages = Math.ceil(totalUser / limit);
+    const users = await user.find({ isAdmin: false }).skip(skip).limit(limit);
+    res.render("admin/userMng", {
+      userdata: users,
+      title: "User Management",
+      currentPage: page,
+      totalPages,
+      totalUser,
+      limit
+    });
+  } catch (error) {
+    console.error("Error loading user management page:", error);
+    res.status(500).send("An error occurred while loading user data.");
+  }
+};
+
 
 //User Block Sectioin
 const block_user=async(req,res)=>{
     try {
         await user.findByIdAndUpdate(req.params.id,{isBlocked:false});
          res.redirect("/admin/loaduserMng")
-        
     } catch (error) {
         console.error("Error blocking user:", error.message);
         res.status(500).send("An error occurred while blocking the user.");
@@ -97,12 +116,16 @@ const logout = (req, res) => {
     req.session.destroy((err) => {
       if (err) {
         console.log(err);
-        res.status(500).send('Error logging out')
+        res.status(500).send("Error logging out");
       } else {
         res.redirect("/admin/login");
       }
     });
   };
+
+  
+
+
 
   
 
