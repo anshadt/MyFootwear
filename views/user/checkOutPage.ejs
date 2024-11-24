@@ -139,12 +139,12 @@ margin-top: 20px;
           color: #6c757d; 
       }
 
-      /* Coupon List Container */
+      
 .coupon-list-container {
     margin-top: 20px;
 }
 
-/* Individual Coupon Item */
+
 .coupon-item {
     display: flex;
     justify-content: space-between;
@@ -161,7 +161,7 @@ margin-top: 20px;
     background-color: #e9ecef;
 }
 
-/* Coupon Code Text */
+
 .coupon-code {
     font-size: 1.2em;
     font-weight: 600;
@@ -169,14 +169,14 @@ margin-top: 20px;
     margin-right: 10px;
 }
 
-/* Coupon Description */
+
 .coupon-description {
     font-size: 0.9em;
     color: #6c757d;
     max-width: 60%;
 }
 
-/* Copy Code Button */
+
 .copy-btn {
     padding: 8px 12px;
     font-size: 0.9em;
@@ -635,7 +635,7 @@ margin-top: 20px;
           form.style.display = form.style.display === "none" ? "block" : "none";
         });
 
-      // Toggle card details display based on payment method selected
+      
       document.getElementById("cod").addEventListener("click", function () {
         document.getElementById("card-details").style.display = "none";
       });
@@ -948,7 +948,7 @@ if (zipCode.length < 6 || /\s/.test(zipCode)) {
         }
     }
 
-    // Handle Wallet Payment and Partial Payment
+   
     else if (paymentMethod === 'wallet') {
         
 try {
@@ -974,19 +974,19 @@ try {
                     window.location.href = '/orderHistory';
                 });
             } else if (!result.success && result.remainingAmount > 0) {
-                // Partial payment flow: Wallet balance is insufficient
-                const remainingAmount = result.remainingAmount; // Get remaining amount to be paid
+                
+                const remainingAmount = result.remainingAmount; 
                 Swal.fire({
                     icon: 'info',
                     title: 'Insufficient Funds in Wallet',
                     text: `Your wallet balance is insufficient. The remaining amount is ₹${remainingAmount}. Proceeding to Razorpay for the remaining balance.`,
                     confirmButtonText: 'Proceed',
                     showCancelButton: true,
-                    cancelButtonText: 'Cancel',  // Text for the cancel button
-                    showCloseButton: true,  // Show the X (close) button
+                    cancelButtonText: 'Cancel', 
+                    showCloseButton: true,  
                     focusCancel: true,
                 }).then(async (result) => {
-                    // Proceed with Razorpay for the remaining balance
+                   
                     if (result.isConfirmed) {
                     const razorpayResponse = await fetch('/Wallet-Pay-OrderCreate', {
                         method: 'POST',
@@ -995,7 +995,7 @@ try {
                         },
                         body: JSON.stringify({
                             addressId,
-                            paymentMethod: 'card', // Razorpay payment method
+                            paymentMethod: 'card', 
                             couponCode,
                             amount: remainingAmount
                         })

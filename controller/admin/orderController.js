@@ -15,7 +15,6 @@ const loard_OrderMng = async (req, res) => {
            Order.countDocuments() 
         ])
         const totalPages = Math.ceil(totalOrders/limit) 
-        //const orders = await Order.find().populate('user', 'name email').populate('items.product').populate('address').sort({ createdAt: -1 });
         res.render('admin/orderMng', { orders,title:'order Management',currentPage:page,totalPages,limit});
     } catch (error) {
         console.error('Error loading orders:', error);

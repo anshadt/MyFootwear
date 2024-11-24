@@ -130,17 +130,6 @@ const updateCartItemQuantity = async (req, res) => {
     if (quantity > 5) {
       return res.status(400).json({ success: false, message: "Maximum quantity reached" });
     }
-  
-
-    // cartItem.quantity = quantity;
-
-    // cartItem.price = (cartItem.product.price -cartItem.product.discount_price)  * quantity;
-
-
-    // cart.total_price = cart.items.reduce((total, item) => total + item.price, 0);
-
-
-
 
     const finalPrice = cartItem.product.discount_price 
         ? cartItem.product.discount_price 

@@ -755,62 +755,7 @@ function toggleDetails(index) {
 
 
 
-// document.addEventListener('click', async (event) => {
-//     if (event.target.classList.contains('cancel-btn') || event.target.classList.contains('return-btn')) {
-//         const button = event.target;
-//         const action = button.classList.contains('cancel-btn') ? 'cancel' : 'return';
-//         const itemId = button.dataset.itemId;
-//         const orderId = button.dataset.orderId;
-        
-//         // Get quantity to cancel/return
-//         const quantityInput = button.previousElementSibling?.classList.contains('cancel-quantity')
-//             ? button.previousElementSibling
-//             : null;
-//         const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
 
-//         if (!quantity || quantity < 1) {
-//             alert('Please select a valid quantity.');
-//             return;
-//         }
-
-//         try {
-//             const response = await fetch('/cancel-or-return', {
-//                 method: 'POST',
-//                 headers: { 'Content-Type': 'application/json' },
-//                 body: JSON.stringify({ orderId, itemId, action, quantity }),
-//             });
-
-//             const data = await response.json();
-//             if (data.success) {
-//                 alert(data.message);
-
-//                 // Update UI
-//                 const itemDiv = document.querySelector(`.order-item[data-item-id="${itemId}"]`);
-//                 const totalAmountElement = document.getElementById('total-amount');
-
-//                 // Update item quantity
-//                 const newQuantity = parseInt(itemDiv.dataset.quantity) - quantity;
-//                 itemDiv.dataset.quantity = newQuantity;
-
-//                 if (newQuantity === 0) {
-//                     button.textContent = action === 'cancel' ? 'Cancelled' : 'Returned';
-//                     button.disabled = true;
-//                 } else {
-//                     const quantityElement = itemDiv.querySelector('p:nth-child(3)');
-//                     quantityElement.textContent = `Quantity: ${newQuantity}`;
-//                 }
-
-//                 // Update total amount
-//                 totalAmountElement.textContent = `₹${data.updatedOrder.totalAmount}`;
-//             } else {
-//                 alert(data.message);
-//             }
-//         } catch (error) {
-//             console.error('Error:', error);
-//             alert('Something went wrong. Please try again.');
-//         }
-//     }
-// });
 
 
 

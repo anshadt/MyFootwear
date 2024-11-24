@@ -519,11 +519,11 @@ const loadUserHomePage = async (req, res) => {
           return res.status(404).json({ error: 'No user with that email found.' });
       }
   
-      // Generate and set reset token
+      
       const token = crypto.randomBytes(20).toString('hex');
       
   
-      // Set cookie for additional security (optional)
+     
       res.cookie('resetToken', token, {
           httpOnly: true,
           maxAge: 2 * 60 * 1000, 
@@ -535,7 +535,7 @@ const loadUserHomePage = async (req, res) => {
           secure: false 
       });
   
-      // Set up email transporter
+     
       const transporter = nodemailer.createTransport({
           service: 'Gmail',
           auth: {
@@ -555,7 +555,7 @@ const loadUserHomePage = async (req, res) => {
           If you did not request this, please ignore this email and your password will remain unchanged.\n`
       };
   
-      // Send email
+      
       transporter.sendMail(mailOptions, (err) => {
           if (err) {
               console.error('Error sending email:', err);
@@ -842,12 +842,6 @@ const loadUserHomePage = async (req, res) => {
                  .text(`${total.toFixed(2)}`, 480, subtotalPosition, { align: 'right' });
 
                  const discount = order.discountAmount ? order.discountAmount.toFixed(2) : '0.00';
-  
-              // if (order.discountAmount) {
-              //     doc.text('Coupon Discount:', 350, subtotalPosition + 20)
-              //       .text(`-${order.discountAmount.toFixed(2)}`, 480, subtotalPosition + 20, { align: 'right' });
-              //       .text(`-${discount}`, 480, subtotalPosition + 20, { align: 'right' });  
-              // }
               doc.text('Discount:', 350, subtotalPosition + 20)
               .text(`-${discount}`, 480, subtotalPosition + 20, { align: 'right' });
                

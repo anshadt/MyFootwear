@@ -36,7 +36,7 @@ const userSchema = mongoose.Schema({
     referralCode: {
         type: String,
         unique: true,
-        // required: true,
+       
     },
     referralUsed: { type: String, default: '' },
     hasUsedReferral: { type: Boolean, default: false },

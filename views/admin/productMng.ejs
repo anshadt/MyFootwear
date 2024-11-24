@@ -11,10 +11,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QLibFx9s37UsRLBfe5dqRvkhcI1B5NeXf5hYk4CkOACf0z+dth1Y4cfLb7AG/hsF" crossorigin="anonymous">
 
     <style>
-        /* Sidebar Styles */
+        
         .sidebar {
             position: fixed;
-            top: 56px; /* Adjust according to your navbar height */
+            top: 56px;
             bottom: 0;
             left: 0;
             width: 250px;
@@ -22,7 +22,7 @@
             color: #fff;
             padding-top: 1rem;
             overflow-y: auto;
-            z-index: 100; /* Ensure it's above other content */
+            z-index: 100; 
         }
 
 
@@ -35,21 +35,21 @@
             background-color: #071553;
         }
 
-        /* Hide sidebar for small screens */
+        
         @media (max-width: 767px) {
             .sidebar {
                 display: none;
             }
         }
 
-         /* Content Styles */
+         
         .content {
-            margin-left: 250px; /* Adjust to match sidebar width */
+            margin-left: 250px; 
             padding: 2rem;
             transition: margin-left 0.3s;
         }
 
-        /* Adjust content margin for smaller screens */
+        
         @media (max-width: 767px) {
             .content {
                 margin-left: 0;

@@ -3,7 +3,7 @@ const category=require("../../models/categoryModel")
 
 
 
-//Load Category Page Section
+
 const load_CategoryPage=async(req,res)=>{
      
     try {
@@ -23,7 +23,7 @@ const load_CategoryPage=async(req,res)=>{
     }
 }
 
-// Add Category Section
+
 const add_Category=async(req,res)=>{
     try {
         const categoryName=req.body.name;
@@ -77,7 +77,7 @@ const edit_Category = async (req, res) => {
   };
   
 
-//Delete Category Section
+
 const delete_Category=async (req, res) => {
   try {
       const { id } = req.params;
@@ -95,7 +95,7 @@ const delete_Category=async (req, res) => {
 };
 
 
-//Restore Category Setion
+
   const restore_Category=async (req, res) => {
     try {
         const { id } = req.params;

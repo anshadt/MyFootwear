@@ -6,7 +6,7 @@ const bcrypt=require('bcrypt');
 const user = require("./models/userModel");
 const userRouter=require('./routes/user');
 const adminRouter=require('./routes/admin')
-//const otpRouter = require('./routes/otpRoutes/otpRoutes');
+
 const bodyParser = require('body-parser');
 const env=require('dotenv').config();
 const connectDB = require('./config/database');
@@ -18,7 +18,6 @@ const app=express();
 connectDB();
 
 app.set('view engine','ejs');
-// app.use('/public', express.static(path.join(__dirname, 'public')));
 app.set('views',path.join(__dirname,'views'))
 app.use(express.static('public'))
 
@@ -46,13 +45,13 @@ app.use('/',userRouter);
 app.use('/admin',adminRouter)
 app.use('/auth',googleRouter)
 
-// app.use((err, req, res, next) => {
-//     console.error(err.stack); 
-//     res.status(err.status || 500).json({
-//         success: false,
-//         message: err.message || 'Internal Server Error',
-//     });
-// });
+app.use((err, req, res, next) => {
+    console.error(err.stack); 
+    res.status(err.status || 500).json({
+        success: false,
+        message: err.message || 'Internal Server Error',
+    });
+});
 
 
   

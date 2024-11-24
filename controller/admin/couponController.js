@@ -2,7 +2,7 @@ const User=require('../../models/userModel')
 const Coupon=require('../../models/couponModel')
 
 
-// Coupon Load Page
+
 const load_CouponPage=async(req,res)=>{
     try {
         const coupon=await Coupon.find()
@@ -13,7 +13,7 @@ const load_CouponPage=async(req,res)=>{
     }   
 }
 
-//// Add Coupon Load Page
+
 const add_Coupon = async (req, res) => {
     try {
         const { coupon_code, description, start_date, expiry_date, discount_percentage, min_amount, max_amount } = req.body;
@@ -85,7 +85,7 @@ const add_Coupon = async (req, res) => {
 };
 
 
-// Edit Coupon
+
 const edit_Coupon= async (req,res)=>{
     try {
         const {coupon_Id,coupon_code,description,start_date,expiry_date,discount_percentage,min_amount,max_amount}=req.body;
@@ -162,7 +162,7 @@ const edit_Coupon= async (req,res)=>{
     }
 }
 
-// Cancel/Delete Coupon
+
 const cancel_Coupon = async (req, res) => {
     try {
         const { coupon_Id } = req.body;

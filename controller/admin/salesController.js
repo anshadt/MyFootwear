@@ -118,7 +118,7 @@ function generatePDFReport(data) {
         doc.moveDown(1);
 
         for (const order of data.orders) {
-            // Add Order header
+            
             doc.fontSize(12).fillColor('#333')
                .text(`Order ID: ${order.orderId}`, 50, doc.y)
                .text(`Order Date: ${new Date(order.orderDate).toLocaleDateString()}`, 400, doc.y - 12, { align: 'right' });
@@ -126,7 +126,7 @@ function generatePDFReport(data) {
             doc.text(`User: ${order.userName}`, 50, doc.y); 
             doc.moveDown(0.5);
 
-            // Table header
+            
             const tableTop = doc.y;
             doc.fontSize(10).fillColor('#555');
             [
@@ -142,7 +142,7 @@ function generatePDFReport(data) {
             generateHr(doc, doc.y + 10);
             doc.moveDown(0.5);
 
-            // Add each item in the order
+            
             let orderSubtotal = 0;
             for (const item of order.items) {
                 const itemTop = doc.y;
@@ -156,7 +156,7 @@ function generatePDFReport(data) {
                 orderSubtotal += item.lineTotal;
             }
 
-            // Order total and coupon
+            
             generateHr(doc, doc.y + 5);
             doc.moveDown(0.5);
             doc.fontSize(10).fillColor('#333');
@@ -270,7 +270,7 @@ const sales_Chart = async (req, res) => {
           { $sort: { year: 1 } } 
         ];
       } else {
-        // Default to monthly aggregation
+        
         aggregationPipeline = [
           {
             $group: {
@@ -300,7 +300,7 @@ const sales_Chart = async (req, res) => {
         ];
       }
 
-      // Perform aggregation query with the dynamic pipeline
+      
       const orderData = await Order.aggregate(aggregationPipeline);
 
       res.json(orderData);

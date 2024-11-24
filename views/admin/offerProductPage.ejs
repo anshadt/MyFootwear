@@ -1,10 +1,10 @@
 <%- include('../../views/partials/adminHeader') %>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <style>
-    /* Sidebar Styles */
+    
     .sidebar {
         position: fixed;
-        top: 56px; /* Adjust according to your navbar height */
+        top: 56px;
         bottom: 0;
         left: 0;
         width: 250px;
@@ -12,7 +12,7 @@
         color: #fff;
         padding-top: 1rem;
         overflow-y: auto;
-        z-index: 100; /* Ensure it's above other content */
+        z-index: 100; 
     }
 
     .sidebar a {
@@ -24,21 +24,21 @@
         background-color: #071553;
     }
 
-    /* Hide sidebar for small screens */
+    
     @media (max-width: 767px) {
         .sidebar {
             display: none;
         }
     }
 
-    /* Content Styles */
+   
     .content {
-        margin-left: 250px; /* Adjust to match sidebar width */
+        margin-left: 250px; 
         padding: 2rem;
         transition: margin-left 0.3s;
     }
 
-    /* Adjust content margin for smaller screens */
+   
     @media (max-width: 767px) {
         .content {
             margin-left: 0;
@@ -46,18 +46,18 @@
         }
     }
 
-    /* Navbar Styles */
+    
     .navbar {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
-        z-index: 200; /* Ensure it's above the sidebar */
+        z-index: 200; 
     }
 
-    /* Adjust table and button styles */
+    
     .table-container {
-        margin-top: 3rem; /* Adjust to account for fixed navbar */
+        margin-top: 3rem; 
     }
 
     .table-header {
@@ -168,7 +168,7 @@
 
         <!-- Main Layout -->
         <div class="container-fluid">
-            <!-- Navbar for larger screens -->
+            
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <a class="navbar-brand" href="#">Admin Dashboard</a>
                 <div class="collapse navbar-collapse justify-content-end">

@@ -5,7 +5,7 @@ const Order=require('../../models/orderModel')
 const Product = require('../../models/productModel')
 const Category=require('../../models/categoryModel')
 
-//Admin Login Page Loading
+
 const load_AdminPage=async(req,res)=>{
 try {
   res.render("admin/adminLogin")
@@ -16,7 +16,7 @@ try {
    
 }
 
-//Admin Dashboard Page Loading
+
 const load_AdminDash=async(req,res)=>{
     try {
       const category = await Category.find({}).sort({saleCount:-1}).limit(10)
@@ -35,7 +35,7 @@ const load_AdminDash=async(req,res)=>{
 
 
 
-//Admin Dashboard
+
 const admin_Dashboard = async (req, res) => {
     try {
       const { email, Password } = req.body;
@@ -65,7 +65,7 @@ const admin_Dashboard = async (req, res) => {
   };
   
 
-//User Manage Page Loading
+
 const load_userMng = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -89,7 +89,7 @@ const load_userMng = async (req, res) => {
 };
 
 
-//User Block Sectioin
+
 const block_user=async(req,res)=>{
     try {
         await user.findByIdAndUpdate(req.params.id,{isBlocked:false});
@@ -100,7 +100,7 @@ const block_user=async(req,res)=>{
     }
 }
 
-//User Unblock Section
+
 const unblock_user=async(req,res)=>{
     try {
         await user.findByIdAndUpdate(req.params.id,{isBlocked:true});
@@ -111,7 +111,7 @@ const unblock_user=async(req,res)=>{
     }
 }
 
-//Admin Logout Section
+
 const logout = (req, res) => {
     req.session.destroy((err) => {
       if (err) {

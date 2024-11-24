@@ -2,15 +2,18 @@ const admin =require('../../routes/admin');
 const product=require('../../models/productModel');
 const category=require('../../models/categoryModel')
 const user=require('../../models/userModel')
-const upload=require('../../config/multer')
+
 const fs=require('fs')
 const path=require('path')
-const sharp=require('sharp');
+
 const { title } = require('process');
+const { cloudinary } = require('../../config/cloudinary');
 
 
 
-//Load Product Page Section
+
+
+
 const load_ProuctPage = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -19,7 +22,6 @@ const load_ProuctPage = async (req, res) => {
     if (req.session.isAdmin) {
       const [Product,totaProduct] = await Promise.all([product.find().skip(skip).limit(limit),product.countDocuments()]);
       const totalPages = Math.ceil(totaProduct/limit);
-      //const Product = await product.find().populate('category_id')
       res.render("admin/productMng",{Product,title:"Product Mangement",currentPage:page,totalPages,limit});
     } else {
       res.redirect("/admin/loadAdminDash");
@@ -31,60 +33,74 @@ const load_ProuctPage = async (req, res) => {
    
   };
   
-//Add Product Page Section
+
 const addProuct_Page=async (req, res) => {
     if (req.session.isAdmin) {
       const Category = await category.find({isDeleted:false});
       res.render("admin/addProduct", { Category,title:'add Product'});
     } else {
-      res.redirect("/admin/addProuctPage");
+      res.redirect("/admin/login");
     }
   };
 
-//Add Product Section
-const add_Product = async (req, res) => {
-  console.log(req.body)
-  try {
-    const { productName, Category_id, description, stock, price,specifications } = req.body;
-    const images = req.files || []; // Ensure `images` is always an array
-     const existProduct = await product.findOne({ productname: productName });
+  const add_Product = async (req, res) => {
+    try {
+      const { productName, Category_id, description, stock, price, specifications } = req.body;
+      const images = req.files || []; 
+  
     const Category = await category.find({ isDeleted: false });
-    const parsedSpecifications = JSON.parse(specifications)
-
-    if (existProduct) {
-      return res.status(400).json({ error: "Product already exists" });
-    }
-
-    let Images = [];
-    if (images.length > 0) {
-      images.forEach(image => {
-        const relativePath = image.path.replace(/^.*[\\\/]public[\\\/]uploads[\\\/]/, '/uploads/');
-        Images.push(relativePath);
+  
+     
+      const existProduct = await product.findOne({ productname: productName });
+      if (existProduct) {
+        return res.status(400).json({ success: false, message: 'Product already exists' });
+      }
+  
+      
+      let parsedSpecifications;
+      try {
+        parsedSpecifications = JSON.parse(specifications);
+      } catch (err) {
+        return res.status(400).json({ success: false, message: 'Invalid specifications JSON', error: err });
+      }
+  
+     
+      const files = req.files || {};
+      let Images = [];
+  
+      ['productImage1', 'productImage2', 'productImage3', 'productImage4'].forEach(fieldName => {
+        if (files[fieldName] && files[fieldName][0]) {
+          Images.push(files[fieldName][0].path); 
+        }
       });
+  
+      if (Images.length === 0) {
+        return res.status(400).json({ success: false, message: 'No images provided' });
+      }
+
+
+    
+      const newProduct = new product({
+        productname: productName,
+        category_id: Category_id,
+        description,
+        stock,
+        price,
+        images: Images,
+        specifications: parsedSpecifications,
+      });
+  
+      await newProduct.save();
+  
+      res.status(200).json({ success: true, message: 'Product added successfully' });
+      console.log('Product added successfully');
+    } catch (error) {
+      console.error('Error adding product:', error);
+      res.status(500).json({ success: false, message: 'Error adding product', error: error.message });
     }
+  };
+  
 
-    const newProduct = new product({
-      productname: productName,
-      category_id: Category_id,
-      description,
-      stock,
-      price,
-      images: Images,
-      specifications : parsedSpecifications,
-    });
-
-    await newProduct.save();
-    res.status(200).json({ success: true });
-    console.log("Product added successfully");
-
-  } catch (error) {
-    console.error('Error adding product:', error);
-    res.status(500).json({ error: 'Error adding product' });
-  }
-};
-
-
-//Edit Product Page Loading Section
 const loadEditProductPage = async (req, res) => {
   try {
     const productId = req.params.id; 
@@ -103,38 +119,63 @@ const loadEditProductPage = async (req, res) => {
 
 
 
-//Edit Product post Section
-const editProduct = async (req, res) => {
-  try {   
-    const productId = req.params.id;
-    const { productName, Category_id,price,stock,description} = req.body;
-    const images = req.files;
-    const existingProduct = await product.findById(productId);
-    if (!existingProduct) {
-      return res.status(404).send('Product not found');
-    }
-    existingProduct.productname = productName;
-    existingProduct.category_id = Category_id;
-    existingProduct.description = description;
-    existingProduct.stock = stock;
-    existingProduct.price = price;
-    if (images && images.length > 0) {
-      let updatedImages = [];
-      images.forEach(image => {
-        const relativePath = image.path.replace(/^.*[\\\/]public[\\\/]uploads[\\\/]/, '/uploads/');
-        updatedImages.push(relativePath);
-      });
-      existingProduct.images = updatedImages;
-    }
-    await existingProduct.save();
-    res.redirect('/admin/loadProuctPage');
-    console.log("Product updated successfully");
 
-  } catch (error) {
-    console.error('Error updating product:', error);
-    res.status(400).send('Error updating product');
-  }
-};
+
+    const editProduct = async (req, res) => {
+      try {
+        const productId = req.params.id;
+        const { productName, Category_id, price, stock, description } = req.body;
+        const images = req.files; 
+        
+        const existingProduct = await product.findById(productId);
+        if (!existingProduct) {
+          return res.status(404).send('Product not found');
+        }
+    
+        
+        existingProduct.productname = productName;
+        existingProduct.category_id = Category_id;
+        existingProduct.description = description;
+        existingProduct.stock = stock;
+        existingProduct.price = price;
+    
+        
+        let updatedImages = [];
+        
+        
+        for (let i = 1; i <= 4; i++) {
+          const base64Image = req.body[`croppedImage${i}`]; 
+          const fileInput = req.files[`image${i}`]; 
+          
+          if (base64Image) {
+            
+            const uploadedImage = await cloudinary.uploader.upload(base64Image, { folder: 'products' });
+            updatedImages.push(uploadedImage.secure_url); 
+          } else if (fileInput && fileInput[0]) {
+            
+            const uploadedFile = await cloudinary.uploader.upload(fileInput[0].path, { folder: 'products' });
+            updatedImages.push(uploadedFile.secure_url); 
+          } else {
+            
+            updatedImages.push(existingProduct.images[i - 1]);
+          }
+        }
+    
+        
+        existingProduct.images = updatedImages;
+        await existingProduct.save();
+    
+        
+        res.redirect('/admin/loadProductPage');
+        console.log("Product updated successfully");
+    
+      } catch (error) {
+        console.error('Error updating product:', error);
+        res.status(400).send('Error updating product');
+      }
+    };
+
+    
 
 const delete_Product = async (req, res) => {
   if (req.session.isAdmin) {
@@ -184,5 +225,6 @@ module.exports={
     loadEditProductPage,
     editProduct,
     delete_Product,
-    restore_Product
+    restore_Product,
+  
 }
