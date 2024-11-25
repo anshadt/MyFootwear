@@ -186,36 +186,6 @@ const generateOrderId = async () => {
 };
 
 
-// const getOrderHistory = async (req, res) => {
-//   const page = parseInt(req.query.page) || 1
-//   const limit = parseInt(req.query.limit) || 6
-//   const skip = (page -1)*limit
-//   try {
-//     const userId = req.session.userId;
-//     if (!userId) {
-//         return res.status(401).json({ message: "Unauthorized" });
-//     }
-//     const wishlist =await Wishlist.findOne({user:req.session.userId}).populate('items.product')
-//   let wishlistCount=0;
-//   if(wishlist){
-//     wishlistCount  = wishlist.items.length;
-//   }  
-//     const user = await User.findOne({ _id: req.session.userId }); 
-//     const cart = await Cart.findOne({ user: user._id }).populate("items.product");
-//     const [orders,totalOrders] = await Promise.all([Order.find({user:userId}).populate('items.product').sort({ createdAt: -1 }).skip(skip).limit(limit),Order.countDocuments()])
-//     totalPages = Math.ceil(totalOrders/limit)
-//         let cartCount = 0;
-//     if (cart && cart.items && cart.items.length > 0) {
-//        cart.items.forEach(item => {
-//        cartCount += item.quantity; 
-//     });
-// }   
-//     res.render('user/orderHistory', { orders,user, cartCount,wishlistCount,currentPage:page,totalPages,limit });
-// } catch (error) {
-//     console.error('Error fetching order history:', error);
-//     res.status(500).json({ message: 'Internal Server Error' });
-// }
-// };
 
 
 const getOrderHistory = async (req, res) => {
@@ -243,11 +213,11 @@ const getOrderHistory = async (req, res) => {
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
-        .lean(), // Convert Mongoose documents to plain objects
+        .lean(), 
       Order.countDocuments({ user: userId }),
     ]);
 
-    // Filter out items with null products
+    
     orders.forEach(order => {
       order.items = order.items.filter(item => item.product);
     });
