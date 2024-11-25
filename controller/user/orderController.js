@@ -261,7 +261,7 @@ const getOrderHistory = async (req, res) => {
       });
     }
 
-    res.render('user/orderHistory', { orders, user, cartCount, wishlistCount, currentPage: page, totalPages, limit });
+    res.render('user/orderHistory', { orders, user, cartCount, wishlistCount, currentPage: page, totalPages:totalPages, limit });
   } catch (error) {
     console.error('Error fetching order history:', error);
     res.status(500).json({ message: 'Internal Server Error' });
