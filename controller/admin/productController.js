@@ -166,7 +166,7 @@ const loadEditProductPage = async (req, res) => {
         await existingProduct.save();
     
         
-        res.redirect('/admin/loadProductPage');
+        res.redirect('/admin/loadProuctPage');
         console.log("Product updated successfully");
     
       } catch (error) {

@@ -734,7 +734,8 @@ function toggleDetails(index) {
         } else {
             Swal.fire({
                         title: "Unable to Return",
-                        text: "Return period has expired or there was an error processing your return.",
+                        // text: "Return period has expired or there was an error processing your return.",
+                        text: data.message || "An error occurred while processing your return.",
                         icon: "error",
                         confirmButtonColor: "#d33"
                     });

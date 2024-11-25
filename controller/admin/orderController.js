@@ -61,7 +61,22 @@ const updateOrderStatus = async (req, res) => {
         }
         if(status === 'Delivered'){
             order.paymentStatus = 'Paid';
-            order.deliveredDate = new Date();
+            if (!order.deliveredDate) {
+                order.deliveredDate = new Date(); // Set current timestamp
+            }
+            for (const item of order.items) {
+                await Product.findByIdAndUpdate(
+                    item.product._id,
+                    { $inc: { saleCount: item.quantity } }
+                );
+                await Category.findByIdAndUpdate(
+                    item.product.category_id,
+                    { $inc: { saleCount: item.quantity } }
+                );
+                
+            }
+           
+            
         }
 
         if(status === 'Cancelled'){

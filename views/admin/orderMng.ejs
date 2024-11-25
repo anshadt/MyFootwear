@@ -259,7 +259,7 @@
                 <tr>
                     <td><%= order.orderId %></td>
                     <td><%= order.createdAt.toLocaleDateString() %></td>
-                    <td><%= order.user.name %></td>
+                    <td><%= order.user ? order.user.name : 'N/A' %></td>
                     <td>$<%= order.totalAmount.toFixed(2) %></td>
                     <td><%= order.paymentMethod %></td>
                     

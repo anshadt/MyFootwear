@@ -311,6 +311,7 @@ const getOrderStatus = async (req, res) => {
 
 const returnOrder = async (req,res) =>{
   const { orderId } = req.body;
+  console.log("req.user:", req.user);
     
     try {
         const userId = req.user._id; 
@@ -334,6 +335,7 @@ const returnOrder = async (req,res) =>{
           
           return res.json({ success: false, message: "Delivered date not set for this order." });
       }
+      
 
       const currentDate = new Date();
       const deliveredDate = new Date(order.deliveredDate);
@@ -355,6 +357,9 @@ const returnOrder = async (req,res) =>{
                   throw new Error("Product stock update failed");
               });
           }
+          if (diffDays > 15) {
+            return res.status(400).json({ success: false, message: 'Return period has expired.' });
+        }
   
           
           const wallet = await Wallet.findOne({ user: order.user });
