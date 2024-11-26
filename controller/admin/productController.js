@@ -2,12 +2,12 @@ const admin =require('../../routes/admin');
 const product=require('../../models/productModel');
 const category=require('../../models/categoryModel')
 const user=require('../../models/userModel')
-
+const upload=require('../../config/multer')
 const fs=require('fs')
 const path=require('path')
 
 const { title } = require('process');
-const { cloudinary } = require('../../config/cloudinary');
+//const { cloudinary } = require('../../config/cloudinary');
 
 
 
@@ -65,20 +65,26 @@ const addProuct_Page=async (req, res) => {
       }
   
      
-      const files = req.files || {};
+      // const files = req.files || {};
+      // let Images = [];
+  
+      // ['productImage1', 'productImage2', 'productImage3', 'productImage4'].forEach(fieldName => {
+      //   if (files[fieldName] && files[fieldName][0]) {
+      //     console.log('Image URLs:', Images);
+      //     Images.push(files[fieldName][0].path || files[fieldName][0].secure_url); 
+      //   }
+      // });
+  
+      // if (Images.length === 0) {
+      //   return res.status(400).json({ success: false, message: 'No images provided' });
+      // }
       let Images = [];
-  
-      ['productImage1', 'productImage2', 'productImage3', 'productImage4'].forEach(fieldName => {
-        if (files[fieldName] && files[fieldName][0]) {
-          console.log('Image URLs:', Images);
-          Images.push(files[fieldName][0].path || files[fieldName][0].secure_url); 
-        }
-      });
-  
-      if (Images.length === 0) {
-        return res.status(400).json({ success: false, message: 'No images provided' });
+      if (images.length > 0) {
+        images.forEach(image => {
+          const relativePath = image.path.replace(/^.*[\\\/]public[\\\/]uploads[\\\/]/, '/uploads/');
+          Images.push(relativePath);
+        });
       }
-
 
     
       const newProduct = new product({
@@ -122,61 +128,94 @@ const loadEditProductPage = async (req, res) => {
 
 
 
-    const editProduct = async (req, res) => {
+    // const editProduct = async (req, res) => {
+    //   try {
+    //     const productId = req.params.id;
+    //     const { productName, Category_id, price, stock, description } = req.body;
+    //     const images = req.files; 
+        
+    //     const existingProduct = await product.findById(productId);
+    //     if (!existingProduct) {
+    //       return res.status(404).send('Product not found');
+    //     }
+    
+        
+    //     existingProduct.productname = productName;
+    //     existingProduct.category_id = Category_id;
+    //     existingProduct.description = description;
+    //     existingProduct.stock = stock;
+    //     existingProduct.price = price;
+    
+        
+    //     let updatedImages = [];
+        
+        
+    //     for (let i = 1; i <= 4; i++) {
+    //       const base64Image = req.body[`croppedImage${i}`]; 
+    //       const fileInput = req.files[`image${i}`]; 
+          
+    //       if (base64Image) {
+            
+    //         const uploadedImage = await cloudinary.uploader.upload(base64Image, { folder: 'products' });
+    //         updatedImages.push(uploadedImage.secure_url); 
+    //       } else if (fileInput && fileInput[0]) {
+            
+    //         const uploadedFile = await cloudinary.uploader.upload(fileInput[0].path, { folder: 'products' });
+    //         updatedImages.push(uploadedFile.secure_url); 
+    //       } else {
+            
+    //         updatedImages.push(existingProduct.images[i - 1]);
+    //       }
+    //     }
+    
+        
+    //     existingProduct.images = updatedImages;
+    //     await existingProduct.save();
+    
+        
+    //     res.redirect('/admin/loadProuctPage');
+    //     console.log("Product updated successfully");
+    
+    //   } catch (error) {
+    //     console.error('Error updating product:', error);
+    //     res.status(400).send('Error updating product');
+    //   }
+    // };
+
+   const editProduct = async (req, res) => {
       try {
         const productId = req.params.id;
         const { productName, Category_id, price, stock, description } = req.body;
-        const images = req.files; 
-        
+        const comingImages = req.files; 
         const existingProduct = await product.findById(productId);
         if (!existingProduct) {
           return res.status(404).send('Product not found');
         }
     
-        
+        // Update product fields
         existingProduct.productname = productName;
         existingProduct.category_id = Category_id;
         existingProduct.description = description;
         existingProduct.stock = stock;
         existingProduct.price = price;
-    
-        
-        let updatedImages = [];
-        
-        
-        for (let i = 1; i <= 4; i++) {
-          const base64Image = req.body[`croppedImage${i}`]; 
-          const fileInput = req.files[`image${i}`]; 
-          
-          if (base64Image) {
-            
-            const uploadedImage = await cloudinary.uploader.upload(base64Image, { folder: 'products' });
-            updatedImages.push(uploadedImage.secure_url); 
-          } else if (fileInput && fileInput[0]) {
-            
-            const uploadedFile = await cloudinary.uploader.upload(fileInput[0].path, { folder: 'products' });
-            updatedImages.push(uploadedFile.secure_url); 
-          } else {
-            
-            updatedImages.push(existingProduct.images[i - 1]);
-          }
+        let updatedImages = existingProduct.images ? [...existingProduct.images] : [];
+        if (comingImages && comingImages.length > 0) {
+          comingImages.forEach(image => {
+            const index = parseInt(image.fieldname.split('productImage')[1], 10) - 1;
+            if (index >= 0 && index < updatedImages.length) {
+              const relativePath = image.path.replace(/^.*[\\\/]public[\\\/]uploads[\\\/]/, '/uploads/');
+              updatedImages[index] = relativePath;
+            }
+          });
         }
-    
-        
         existingProduct.images = updatedImages;
         await existingProduct.save();
-    
-        
         res.redirect('/admin/loadProuctPage');
-        console.log("Product updated successfully");
-    
       } catch (error) {
         console.error('Error updating product:', error);
         res.status(400).send('Error updating product');
       }
     };
-
-    
 
 const delete_Product = async (req, res) => {
   if (req.session.isAdmin) {

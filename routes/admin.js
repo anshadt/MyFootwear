@@ -7,7 +7,8 @@ const categoryController=require('../controller/admin/categoryController')
 const productController=require('../controller/admin/productController')
 const orderController=require('../controller/admin/orderController')
 const adminAuth=require('../middlewares/adminAuth')
-const { uploads } = require('../config/cloudinary');
+// const { uploads } = require('../config/cloudinary');
+const upload=require('../config/multer')
 //const upload=require('../config/multer')
 //const { cloudinaryUploads } = require('../config/cloudinary');
 const salesController=require('../controller/admin/salesController')
@@ -33,14 +34,15 @@ adminRouter.put('/restoreCategory/:id',categoryController.restore_Category);
 //Product Management
 adminRouter.get('/loadProuctPage',productController.load_ProuctPage);
 adminRouter.get('/addProuctPage',productController.addProuct_Page)
-adminRouter.post('/addProduct',adminAuth,uploads.fields([
-    { name: 'productImage1', maxCount: 1 },
-    { name: 'productImage2', maxCount: 1 },
-    { name: 'productImage3', maxCount: 1 },
-    { name: 'productImage4', maxCount: 1 },
-  ]),productController.add_Product);
+// adminRouter.post('/addProduct',adminAuth,uploads.fields([
+//     { name: 'productImage1', maxCount: 1 },
+//     { name: 'productImage2', maxCount: 1 },
+//     { name: 'productImage3', maxCount: 1 },
+//     { name: 'productImage4', maxCount: 1 },
+//   ]),productController.add_Product);
+adminRouter.post('/addProduct',adminAuth,upload.any(),productController.add_Product);
 adminRouter.get('/editProductPage/:id',productController.loadEditProductPage);
-adminRouter.post('/editProduct/:id', uploads.any(),productController.editProduct);
+adminRouter.post('/editProduct/:id', adminAuth,upload.any(),productController.editProduct);
 
 
 adminRouter.put('/deleteProduct/:productId',productController.delete_Product);
