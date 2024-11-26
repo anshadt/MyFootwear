@@ -7,7 +7,7 @@ module.exports = async (req, res, next) => {
   console.log("Session data:", req.session);
 
   try {
-    const excludedPaths = ['/', '/login', '/signup', '/auth/google', '/auth/google/callback'];
+    const excludedPaths = ['/', '/login', '/signup', '/auth/google', '/auth/google/callback','/admin/login'];
     if (excludedPaths.includes(req.path)) {
       console.log("Skipping authentication for:", req.path);
       return next();
