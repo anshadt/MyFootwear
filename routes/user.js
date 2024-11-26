@@ -14,7 +14,7 @@ const walletController=require('../controller/user/walletController')
 
 
 
-userRouter.use(isBlockAuth)
+
 //Index Page Loading
 userRouter.get('/',userController.loadIndexPage);
 userRouter.get('/login',userController.loadLogin);
