@@ -423,7 +423,7 @@ const loadUserHomePage = async (req, res) => {
         wishlistCount=wishlist.items.length
     }
 
-      res.render('user/single-product', { Product,Category,cartCount,wishlistCount,user});
+      res.render('user/single-Product', { Product,Category,cartCount,wishlistCount,user});
     } catch (err) {
       console.error(err);
       res.redirect('/userHomePage');
