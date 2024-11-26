@@ -20,7 +20,13 @@ const storage = new CloudinaryStorage({
   },
 });
 
-const uploads = multer({ storage });
+const uploads = multer({ storage }).fields([
+  { name: 'productImage1', maxCount: 1 },
+  { name: 'productImage2', maxCount: 1 },
+  { name: 'productImage3', maxCount: 1 },
+  { name: 'productImage4', maxCount: 1 },
+]);
+
 
 module.exports = { cloudinary, uploads };
 

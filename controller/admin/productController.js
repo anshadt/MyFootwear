@@ -71,7 +71,7 @@ const addProuct_Page=async (req, res) => {
       ['productImage1', 'productImage2', 'productImage3', 'productImage4'].forEach(fieldName => {
         if (files[fieldName] && files[fieldName][0]) {
           console.log('Image URLs:', Images);
-          Images.push(files[fieldName][0].secure_url); 
+          Images.push(files[fieldName][0].path || files[fieldName][0].secure_url); 
         }
       });
   
