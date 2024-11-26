@@ -363,7 +363,7 @@ margin-top: 20px;
                     <div class="card wallet-card h-100">
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title">Wallet Balance</h5>
-                            <h2 class="card-text mb-4 display-4 fw-bold">₹<%= wallet.balanceAmount.toFixed(2) %></h2>
+                            <h2 class="card-text mb-4 display-4 fw-bold">₹<%= wallet.balanceAmount ? wallet.balanceAmount.toFixed(2) : '0.00' %></h2>
                         </div>
                     </div>
                 </div>

@@ -173,10 +173,11 @@ const checkOutPage= async(req,res)=>{
        cartCount  = cart.items.length;
     }
     const wishlist =await Wishlist.findOne({user:req.session.userId}).populate('items.product')
-  let wishlistCount=0;
-  if(wishlist){
-    wishlistCount  = wishlist.items.length;
-  }     
+  // let wishlistCount=0;
+  // if(wishlist){
+  //   wishlistCount  = wishlist.items.length;
+  // } 
+  let wishlistCount = wishlist ? wishlist.items.length : 0;    
     const address = await Address.find({userId:req.session.userId});
     const currentDate = new Date();
         const availableCoupons = await Coupon.find({
@@ -187,6 +188,9 @@ const checkOutPage= async(req,res)=>{
         }).lean();
         let charges = 50;
         let wallet = await Wallet.findOne({user: user._id})
+        if (!wallet) {
+          wallet = { balanceAmount: 0 }; 
+        }
     res.render('user/checkOutPage',{cart,address,wishlistCount,cartCount,user,availableCoupons,charges,wallet})
 } catch (error) {
     console.error('Error fetching cart:', error); 
