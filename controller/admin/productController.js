@@ -20,7 +20,7 @@ const load_ProuctPage = async (req, res) => {
     const limit = parseInt(req.query.limit) || 6
     const skip = (page-1)*limit;
     if (req.session.isAdmin) {
-      const [Product,totaProduct] = await Promise.all([product.find().skip(skip).limit(limit),product.countDocuments()]);
+      const [Product,totaProduct] = await Promise.all([product.find().populate('category_id', 'category_name').skip(skip).limit(limit),product.countDocuments()]);
       const totalPages = Math.ceil(totaProduct/limit);
       res.render("admin/productMng",{Product,title:"Product Mangement",currentPage:page,totalPages,limit});
     } else {

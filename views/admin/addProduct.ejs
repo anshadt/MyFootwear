@@ -495,7 +495,7 @@ const MAX_FILE_SIZE = 2 * 1024 * 1024;
               } catch (error) {
                   Swal.fire({
                       title: "Oops!",
-                      text: "Something went wrong! Please try again",
+                      text: data.message || "Something went wrong! Please try again",
                       icon: "error"
                   });
               }
