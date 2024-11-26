@@ -467,6 +467,7 @@ const MAX_FILE_SIZE = 2 * 1024 * 1024;
                       body: formData
                   });
                   const data = await response.json();
+                  console.log(data);
                   
                   if (response.ok) { 
                       if (data.success) {
@@ -495,7 +496,7 @@ const MAX_FILE_SIZE = 2 * 1024 * 1024;
               } catch (error) {
                   Swal.fire({
                       title: "Oops!",
-                      text: data.message || "Something went wrong! Please try again",
+                      text:"Something went wrong! Please try again",
                       icon: "error"
                   });
               }
