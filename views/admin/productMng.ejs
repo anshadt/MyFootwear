@@ -249,10 +249,16 @@
                                   </td>
                                 <td><%= product.price %></td>
                         
-                                <td>
+                                <!-- <td>
                                         <img src="<%= product.images[0] %>" alt="" style="width: 100px; height: auto;">
-                                </td>
+                                </td> -->
                                 <td>
+                                    <% if (product.images && product.images[0]) { %>
+                                      <img src="<%= product.images[0] %>" alt="Product Image" style="width: 100px; height: auto;">
+                                    <% } else { %>
+                                      <p>No Image Available</p>
+                                    <% } %>
+                                  </td>
                                     <% if (product.specifications && product.specifications.length > 0) { %>
                                       <ul>
                                         <% product.specifications.forEach(spec => { %>
