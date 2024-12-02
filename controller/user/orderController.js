@@ -311,7 +311,7 @@ const getOrderStatus = async (req, res) => {
 
 const returnOrder = async (req,res) =>{
   const { orderId } = req.body;
-  console.log("req.user:", req.user);
+  
     
     try {
         const userId = req.user._id; 
@@ -368,17 +368,14 @@ const returnOrder = async (req,res) =>{
               wallet.wallet_history.push({
                   date: new Date(),
                   amount: order.totalAmount,
-                  description: 'Order Return',
+                  description: `Refund for returned item(Order ID: ${order.orderId})`,
                   transactionType: 'credited',
               });
   
               await wallet.save().catch((error) => {
                   throw new Error("Wallet update failed");
               });
-              console.log("Wallet balance updated");
-          } else {
-              console.warn("Wallet not found for user:", order.user);
-          }
+          } 
   
           
           await order.save().catch((error) => {
@@ -456,16 +453,16 @@ const razor_PayOrderCreate = async (req, res) => {
 
 const wallet_PayOrderCreate = async (req, res) => {
   try {
-    console.log(req.session.userId);
+   
     if (!req.session.userId) {
       return res.status(401).json({ success: false, message: 'Unauthorized' });
     }
 
     const { addressId, couponCode, paymentMethod } = req.body;
-    console.log(addressId, paymentMethod, couponCode);
+    
 
     const cart = await Cart.findOne({ user: req.session.userId }).populate('items.product');
-    console.log(cart);
+    
     if (!cart || cart.items.length === 0) {
       return res.status(400).json({ success: false, message: 'Cart is empty' });
     }
@@ -539,13 +536,13 @@ const wallet_PayOrderCreate = async (req, res) => {
 
 const razorPay_payment = async (req, res) => {
   try {
+   
     const { payment_id, order_id, signature, addressId, couponCode, paymentMethod } = req.body;
     const address = await Address.findById(addressId);
 
     if (!req.session.userId) {
       return res.status(401).json({ success: false, message: 'Unauthorized' });
     }
-
     const cart = await Cart.findOne({ user: req.session.userId }).populate('items.product');
 
     if (!cart || cart.items.length === 0) {
@@ -638,7 +635,7 @@ const razorPay_payment = async (req, res) => {
       userWallet.wallet_history.push({
         date: new Date(),
         amount: walletDeduction,
-        description: "Order payment from wallet",
+        description: 'Order payment from Wallet',
         transactionType: 'debited',
       });
       await userWallet.save();

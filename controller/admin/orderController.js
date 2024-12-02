@@ -62,7 +62,7 @@ const updateOrderStatus = async (req, res) => {
         if(status === 'Delivered'){
             order.paymentStatus = 'Paid';
             if (!order.deliveredDate) {
-                order.deliveredDate = new Date(); // Set current timestamp
+                order.deliveredDate = new Date(); 
             }
             for (const item of order.items) {
                 await Product.findByIdAndUpdate(

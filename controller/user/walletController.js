@@ -9,6 +9,7 @@ const Razorpay=require('../../config/razorPay')
 const crypto = require('crypto');
 const Order = require('../../models/orderModel')
 const InvoiceCounter = require('../../models/invoiceCounterModel')
+const Coupon = require('../../models/couponModel')
 
 
 
@@ -175,8 +176,8 @@ const expectedSignature = crypto
 
 
 const Order_Wallet = async (req, res) => {
-
   
+
   try {
     if (!req.session.userId) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
@@ -188,7 +189,8 @@ const Order_Wallet = async (req, res) => {
     const { addressId, couponCode } = req.body;
     const wallet = await Wallet.findOne({ user: user._id });
     const address = await Address.findById(addressId);
-
+    
+    
     if (!address) {
       return res.status(400).json({ success: false, message: "Address not found" });
     }
@@ -315,7 +317,7 @@ const Order_Wallet = async (req, res) => {
     wallet.wallet_history.push({
       date: new Date(),
       amount: totalAmount,
-      description: "Order payment from wallet",
+      description: `Order payment from wallet for Order ID: ${newOrderId}`,
       transactionType: 'debited',
     });
     await wallet.save();

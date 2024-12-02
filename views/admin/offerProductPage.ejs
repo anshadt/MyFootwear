@@ -1,18 +1,17 @@
 <%- include('../../views/partials/adminHeader') %>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <style>
-    
     .sidebar {
         position: fixed;
-        top: 56px;
-        bottom: 0;
+        top: 0;
         left: 0;
-        width: 250px;
+        height: 100vh;
         background-color: #ffbe33;
         color: #fff;
-        padding-top: 1rem;
+        padding-top: 5rem;
+        width: 16.666667%;
         overflow-y: auto;
-        z-index: 100; 
+        z-index: 100;
     }
 
     .sidebar a {
@@ -24,92 +23,122 @@
         background-color: #071553;
     }
 
-    
-    @media (max-width: 767px) {
-        .sidebar {
-            display: none;
+    .content {
+        margin-left: 16.666667%;
+        padding: 2rem;
+        margin-top: 3.5rem;
+        width: calc(100% - 16.666667%);
+    }
+
+    .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 200; 
+  }
+
+    #couponDetails {
+        display: none;
+    }
+
+    .date-range {
+        display: none;
+    }
+
+    .chart-container {
+        width: 100%;
+        height: 400px;
+        margin-top: 20px;
+    }
+
+    .card {
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-header {
+        border-top-left-radius: 15px !important;
+        border-top-right-radius: 15px !important;
+        background: linear-gradient(45deg, #3a7bd5, #00d2ff) !important;
+        border: none;
+    }
+
+    #salesChart {
+        min-height: 400px;
+        padding: 20px;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    #loadingIndicator {
+        position: relative;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        margin-top: 15px;
+    }
+
+    .alert {
+        animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
         }
     }
 
-   
-    .content {
-        margin-left: 250px; 
-        padding: 2rem;
-        transition: margin-left 0.3s;
+    .alert-dismissible .close {
+        padding: 0.5rem 1rem;
     }
 
-   
-    @media (max-width: 767px) {
+    @media (max-width: 768px) {
+        .sidebar {
+            position: static;
+            height: auto;
+            width: 100%;
+            padding-top: 1rem;
+        }
+        
         .content {
             margin-left: 0;
-            padding: 1rem;
+            width: 100%;
         }
     }
 
-    
-    .navbar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 200; 
+    .sidebar .nav-link {
+        padding: 0.8rem 1rem;
+        transition: all 0.3s ease;
+        border-radius: 5px;
+        margin: 0.2rem 0.5rem;
     }
 
-    
-    .table-container {
-        margin-top: 3rem; 
+    .sidebar .nav-link:hover {
+        background-color: #071553;
+        transform: translateX(5px);
     }
 
-    .table-header {
-        background-color: #007bff;
-        color: #fff;
+    .sidebar .nav-link i {
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
     }
 
-    .table-header th {
+    .sidebar .nav-link.active {
         font-weight: bold;
-    }
-
-    .table img {
-        width: 80px;
-        height: 80px;
-        object-fit: cover;
-        border-radius: 4px;
-    }
-
-    .table-actions {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .btn-edit {
-        background-color: #28a745;
-        color: #fff;
-        border: none;
-    }
-
-    .btn-edit:hover {
-        background-color: #218838;
-    }
-
-    .btn-delete {
-        background-color: #dc3545;
-        color: #fff;
-        border: none;
-    }
-
-    .btn-delete:hover {
-        background-color: #c82333;
-    }
-
-    .btn-add {
-        background-color: rgb(6, 92, 13);
-        color: #fff;
-        border: none;
-    }
-
-    .btn-add:hover {
-        background-color: #0056b3;
     }
 </style>
 <!-- Navbar for mobile -->
@@ -133,12 +162,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/loadProuctPage">
+                        <a class="nav-link" href="#">
                             <i class="fas fa-box"></i> Products
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/loardOrderMng">
+                        <a class="nav-link" href="#">
                             <i class="fas fa-shopping-cart"></i> Orders
                         </a>
                     </li>
@@ -148,17 +177,17 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/loadCouponPage">
+                        <a class="nav-link" href="#">
                             <i class="fas fa-tag"></i> Coupon
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">
-                            <i class="fas fa-credit-card"></i> Offer
+                            <i class="fas fa-credit-card"></i> Payment
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/logout">
+                        <a class="nav-link" href="#">
                             <i class="fas fa-sign-out-alt"></i> Logout
                         </a>
                     </li>
@@ -168,7 +197,7 @@
 
         <!-- Main Layout -->
         <div class="container-fluid">
-            
+            <!-- Navbar for larger screens -->
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <a class="navbar-brand" href="#">Admin Dashboard</a>
                 <div class="collapse navbar-collapse justify-content-end">
@@ -234,7 +263,7 @@
                                         <input type="date" class="form-control" id="offerStartDate" name="offerStartDate" required>
                                     </div>
                                     <div class="col-12">
-                                        <button type="button" class="btn btn-primary" onclick="AddOffer()">Add Offer</button>
+                                        <button type="button" class="btn btn-primary" onclick="AddOffer()">Add Item</button>
                                     </div>
                                 </div>
                             </form>
@@ -281,24 +310,24 @@
                         </div>
                     </div>
                 </div>
-               
+                <!-- Add Offer Card End--1 -->
 
-                
+                <!-- Products Card Start--2 -->
                 <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                     <div class="row row-cols-1 row-cols-md-3 g-4">
                         <% product.forEach(Product => { %>
                         <div class="col">
                             <div class="card h-100">
                             <div class="d-flex justify-content-center mt-3">
-                                <img src="<%= Product.images[0] %>" alt="" style="width: 100px; height: auto;">
+                                <img src="/public/<%= Product.images[0] %>" alt="" style="width: 100px; height: auto;">
                             </div>
                             <div class="card-body">
                               <div class="mb-3">
                                   <p class="card-title text-center"><%= Product.productname %></p>
                                 <select class="form-select" id="editType" onchange="updateProductOffer('<%= Product._id %>',this.value)" required>
-                                    <option value="offer">Select Offers</option>
+                                    <option value="<%= Product._id %>">Select Offers</option>
                                     <% selectoffer.forEach(Offer => { %>
-                                        <option value="<%= Offer._id %>" <% if (Product.offer && Product.offer._id.toString() === Offer._id.toString()) { %> selected  <% } %> >
+                                        <option value="<%= Offer._id %>" <% if (Product.offer && Product.offer._id.toString() === Offer._id.toString()) { %> selected  <% } %>>
                                             <%= Offer.offerName %> - <%= Offer.offerPercentage %>%
                                         </option>
                                     <% }) %>
@@ -310,7 +339,9 @@
                         <% }) %>
                       </div>
                 </div>
-                
+                <!-- Products Card End--2 -->
+
+                <!-- Categories Card Start--3 -->
                 <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
                     <div class="row row-cols-1 row-cols-md-3 g-4">
                         <div class="col">
@@ -334,10 +365,12 @@
                             </td>      
                            
                                 <td>
-                                 <select class="form-select" id="editType"required>
-                                 <option value="offer">Select Offers</option>
+                                 <select class="form-select" id="editType" onchange="updateCategoryOffer('<%= Category._id %>',this.value)" required>
+                                 <option value="<%= Category._id %>">Select Offers</option>
                                  <% selectoffer.forEach((Offer) => { %>
-                                 <option value="product"><%= Offer.offerName %> - <%= Offer.offerPercentage %>%</option>
+                                 <option value="<%= Offer._id %>"<% if (Category.offer && Category.offer._id.toString() === Offer._id.toString()) { %> selected  <% } %>>
+                                    <%= Offer.offerName %> - <%= Offer.offerPercentage %>%
+                                </option>
                                  <% }) %>  
                                 </select>    
                                 </td>
@@ -348,11 +381,11 @@
                         </tbody>
                       </table>
                 </div>
-               
+                <!-- Categories Card End--3 -->
               </div>
         </main>
     
-        
+        <!-- Edit Modal -->
         <div class="modal fade" id="editOfferModal" tabindex="-1" aria-labelledby="editOfferModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -393,7 +426,7 @@
  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
  <script>
-    
+    //Add Offer-----------Start
     async function AddOffer() {
         const Toast = Swal.mixin({
           toast: true,
@@ -525,7 +558,11 @@
           });
         }
       }
-      
+      //Add Offer-----------End
+
+     
+
+      //Edit Offer-----------Start
       document.addEventListener("DOMContentLoaded", () => {
       const editBtns = document.querySelectorAll('.editOfferBtn'); 
       editBtns.forEach((button) => {
@@ -678,7 +715,9 @@
 
         }
 
-        
+        //Edit Offer----------End
+
+        //Delete Offer-----------Start
         function deleteItem(OfferId) {
     Swal.fire({
         title: 'Are you sure?',
@@ -725,7 +764,9 @@
         }
     });
 }
- 
+ //Delete Offer-----------End
+
+  //Restore Offer-----------Start
 function restoreOffer(offerId) {
     Swal.fire({
         title: 'Are you sure?',
@@ -772,17 +813,21 @@ function restoreOffer(offerId) {
         }
     });
 }
+//Restore Offer-----------End
 
+
+
+    //Apply Product Offer-----------Start
      async function updateProductOffer(productId,offerId){
         try{
-          const responce = await fetch('/admin/updateProductOffer',{
+          const response = await fetch('/admin/updateProductOffer',{
             method:'POST',
             headers:{
               'Content-Type':'application/json'
             },
             body:JSON.stringify({productId,offerId})
         })
-        const result = await responce.json()
+        const result = await response.json()
         if(result.success){
           Swal.fire({
             icon:'success',
@@ -804,7 +849,41 @@ function restoreOffer(offerId) {
           Swal.fire('Error!', 'There was a problem processing your request.', 'error');
         }
     }
-    
+    //Apply Offer-----------End
+
+     //Apply Category Offer-----------Start
+    async function updateCategoryOffer(categoryId,offerId){
+        try{
+          const response = await fetch('/admin/updateCategoryOffer',{
+            method:'POST',
+            headers:{
+              'Content-Type':'application/json'
+            },
+            body:JSON.stringify({categoryId,offerId})
+        })
+        const result = await response.json()
+        if(result.success){
+          Swal.fire({
+            icon:'success',
+            title:'offer updated',
+            text:result.message,
+            confirmButtonText:'OK'
+          }).then(()=>{
+            window.location.reload()
+          })
+        }else{
+          Swal.fire({
+            icon:'error',
+            title:'failed to update',
+            text:result.error,
+            confirmButtonText:'OK'
+          })
+        }
+        }catch(error){
+          Swal.fire('Error!', 'There was a problem processing your request.', 'error');
+        }
+      } 
+
 </script>
 
 <%- include('../../views/partials/adminFooter') %>

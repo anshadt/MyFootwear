@@ -11,9 +11,7 @@ const applyCoupon = async (req, res) => {
             return res.json({ success: false, message: 'Cart not found' });
         }
        
-        const cartTotal = cart.items.reduce((total, item) => {
-            return total + (item.product.price * item.quantity);
-        }, 0);
+        const cartTotal = cart.total_price.toFixed(2)
         
         const coupon = await Coupon.findOne({ 
             coupon_code: couponCode,

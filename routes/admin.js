@@ -18,6 +18,7 @@ const couponController=require('../controller/admin/couponController')
 //Admin DashBoard
 adminRouter.get('/login',adminController.load_AdminPage);
 adminRouter.get('/loadAdminDash',adminController.load_AdminDash);
+adminRouter.get('/salesReport',salesController.load_SalesReport);
 adminRouter.post('/adminPage',adminController.admin_Dashboard);
 adminRouter.get('/loaduserMng',adminController.load_userMng);
 adminRouter.get('/logout',adminController.logout);
@@ -34,12 +35,6 @@ adminRouter.put('/restoreCategory/:id',categoryController.restore_Category);
 //Product Management
 adminRouter.get('/loadProuctPage',productController.load_ProuctPage);
 adminRouter.get('/addProuctPage',productController.addProuct_Page)
-// adminRouter.post('/addProduct',adminAuth,uploads.fields([
-//     { name: 'productImage1', maxCount: 1 },
-//     { name: 'productImage2', maxCount: 1 },
-//     { name: 'productImage3', maxCount: 1 },
-//     { name: 'productImage4', maxCount: 1 },
-//   ]),productController.add_Product);
 adminRouter.post('/addProduct',adminAuth,upload.any(),productController.add_Product);
 adminRouter.get('/editProductPage/:id',productController.loadEditProductPage);
 adminRouter.post('/editProduct/:id', adminAuth,upload.any(),productController.editProduct);
@@ -63,6 +58,8 @@ adminRouter.post('/cancel-coupon', couponController.cancel_Coupon);
 
 //Sales Report Section 
 adminRouter.post('/generateSalesReport',adminAuth,salesController.generateSalesReport)
+// router.post('/generatePDFReport', adminAuth, salesController.generatePDFReport);
+// router.post('/generateExcelReport', adminAuth, salesController.generateExcelReport);
 adminRouter.get('/salesChart',adminAuth,salesController.sales_Chart)
 
 //Offer Section 
