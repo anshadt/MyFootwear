@@ -169,14 +169,13 @@ const checkOutPage= async(req,res)=>{
       return res.status(401).json({ success: false, message: "User not authenticated" })
     }
     let cartCount=0;
+    let total_price = 0;
     if(cart){
        cartCount  = cart.items.length;
+       total_price = cart.total_price || 0;
     }
     const wishlist =await Wishlist.findOne({user:req.session.userId}).populate('items.product')
-  // let wishlistCount=0;
-  // if(wishlist){
-  //   wishlistCount  = wishlist.items.length;
-  // } 
+  
   let wishlistCount = wishlist ? wishlist.items.length : 0;    
     const address = await Address.find({userId:req.session.userId});
     const currentDate = new Date();
@@ -191,7 +190,8 @@ const checkOutPage= async(req,res)=>{
         if (!wallet) {
           wallet = { balanceAmount: 0 }; 
         }
-    res.render('user/checkOutPage',{cart,address,wishlistCount,cartCount,user,availableCoupons,charges,wallet})
+        const cartData = cart || { items: [], total_price: 0 };
+    res.render('user/checkOutPage',{cart: cartData,address,wishlistCount,cartCount,user,availableCoupons,charges,wallet})
 } catch (error) {
     console.error('Error fetching cart:', error); 
 res.status(500).send('Something went wrong!');

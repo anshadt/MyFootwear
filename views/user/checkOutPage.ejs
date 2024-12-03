@@ -479,7 +479,7 @@ margin-top: 20px;
             </form>
           </div>
           <!-- Payment Method Section -->
-            <% if (cart.total_price > 1000) { %>
+            <% if (cart && cart.total_price > 1000) { %>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="paymentMethod" id="cod" disabled />
                     <label class="form-check-label" for="cod">
