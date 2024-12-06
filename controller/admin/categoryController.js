@@ -1,5 +1,6 @@
 const admin =require("../../routes/admin")
 const category=require("../../models/categoryModel")
+const product = require('../../models/productModel')
 
 
 
@@ -11,7 +12,7 @@ const load_CategoryPage=async(req,res)=>{
         const limit = parseInt(req.query.limit) || 3;
         const skip = (page -1) * limit;
        if(req.session.isAdmin){
-        const [catData, totalCategories]=await Promise.all([category.find().skip(skip).limit(limit),category.countDocuments()])
+        const [catData, totalCategories]=await Promise.all([category.find().sort({createdAt: -1}).skip(skip).limit(limit),category.countDocuments()])
         const totalPages = Math.ceil(totalCategories/limit)
            res.render('admin/categoryPage',{catData,title:'Category Management',currentPage:page,totalPages,limit})
        } else{
@@ -65,7 +66,7 @@ const edit_Category = async (req, res) => {
         return res.status(400).json({ success: false, message: 'Category name already exists' });
       }
       cateData.category_name = upperCaseName;
-      console.log(cateData);
+    //   console.log(cateData);
       
       await cateData.save();
   
@@ -87,6 +88,8 @@ const delete_Category=async (req, res) => {
       }
       Category.isDeleted = true;
       await Category.save();
+      await product.updateMany({ category_id: id }, { isDelete: true });
+     
       res.status(200).json({ success: true, message: 'Category deleted successfully' });
   } catch (error) {
       console.error('Error deleting category:', error);

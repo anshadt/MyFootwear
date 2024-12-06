@@ -8,6 +8,12 @@
     <link rel="shortcut icon" href="/images/iconshoe.jpg" type="">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         
         .sidebar {
@@ -190,14 +196,23 @@
                 <div class="d-flex justify-content-between mb-4">
                 </div>
 
+                <form class="form-inline" method="get" action="">
+                    <div class="input-group">
+                        <input
+                            class="form-control"
+                            type="search"
+                            placeholder="Search by name"
+                            aria-label="Search"
+                            name="search"
+                            id="searchInput"
+                            value="<%= searchQuery || '' %>" 
+                        />
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">Search</button>
+                        </div>
+                    </div>
+                </form>
                 
-                <!-- <div class="mb-4">
-                    <form class="form-inline" method="post" action="/admin/search">
-                        <input class="form-control mr-2" type="search" placeholder="Search" aria-label="Search" name="search">
-                        <button class="btn btn-primary" type="submit">Search</button>
-                    </form>
-                </div> -->
-
                 
                 <!-- User Table -->
                 <table class="table table-striped">
@@ -235,7 +250,9 @@
                                         <a href="/admin/unblock-user/<%= users._id %>" class="btn btn-danger" type="submit"onclick="return confirm('Do you Want to UnBlock <%= users.name %>?')">Block</a>
                 
                                     <% } %>
-                                    </td>
+                                    
+                                    
+                                    </td> 
                                 </tr>
                             <% }) %>
                         <% } else { %>
@@ -310,6 +327,21 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+     
+
+        <script>
+    document.getElementById('searchInput').addEventListener('input', function (e) {
+        if (!e.target.value) {
+            // If the input is cleared, reload the page to show all data
+            window.location.href = window.location.pathname;
+        }
+    });
+    </script>
+
+    
+
+    
 </body>
 
 </html>

@@ -4,6 +4,7 @@ const bcrypt=require('bcrypt')
 const Order=require('../../models/orderModel')
 const Product = require('../../models/productModel')
 const Category=require('../../models/categoryModel')
+const userModel = require('../../models/userModel')
 
 
 const load_AdminPage=async(req,res)=>{
@@ -66,28 +67,64 @@ const admin_Dashboard = async (req, res) => {
   
 
 
+// const load_userMng = async (req, res) => {
+//   try {
+//     const page = parseInt(req.query.page) || 1;
+//     const limit = 6;
+//     const skip = (page - 1) * limit;
+//     const totalUser = await user.countDocuments({ isAdmin: false });
+//     const totalPages = Math.ceil(totalUser / limit);
+//     const users = await user.find({ isAdmin: false }).sort({createdAt: -1}).skip(skip).limit(limit);
+//     res.render("admin/userMng", {
+//       userdata: users,
+//       title: "User Management",
+//       currentPage: page,
+//       totalPages,
+//       totalUser,
+//       limit
+//     });
+//   } catch (error) {
+//     console.error("Error loading user management page:", error);
+//     res.status(500).send("An error occurred while loading user data.");
+//   }
+// };
+
 const load_userMng = async (req, res) => {
   try {
+    const searchQuery = req.query.search || '';
+
+    // Apply the filter for search functionality
+    const filter = searchQuery
+        ? { name: { $regex: `^${searchQuery}`, $options: 'i' }, isAdmin: false }
+        : { isAdmin: false };
+
     const page = parseInt(req.query.page) || 1;
     const limit = 6;
     const skip = (page - 1) * limit;
-    const totalUser = await user.countDocuments({ isAdmin: false });
+
+    // Use the filter in countDocuments and find
+    const totalUser = await user.countDocuments(filter);
     const totalPages = Math.ceil(totalUser / limit);
-    const users = await user.find({ isAdmin: false }).skip(skip).limit(limit);
+
+    const users = await user.find(filter)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
+
     res.render("admin/userMng", {
       userdata: users,
       title: "User Management",
       currentPage: page,
       totalPages,
       totalUser,
-      limit
+      limit,
+      searchQuery, // Pass the search query to retain it in the input field
     });
   } catch (error) {
     console.error("Error loading user management page:", error);
     res.status(500).send("An error occurred while loading user data.");
   }
 };
-
 
 
 const block_user=async(req,res)=>{
@@ -112,6 +149,9 @@ const unblock_user=async(req,res)=>{
 }
 
 
+
+
+
 const logout = (req, res) => {
     req.session.destroy((err) => {
       if (err) {
@@ -122,6 +162,8 @@ const logout = (req, res) => {
       }
     });
   };
+
+
 
   
 

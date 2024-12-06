@@ -69,8 +69,7 @@ adminRouter.post('/editOffer',adminAuth,offerController.edit_Offer)
 adminRouter.put('/deleteOffer/:id',adminAuth,offerController.delete_Offer);
 adminRouter.put('/restoreOffer/:id',adminAuth,offerController.restore_Offer);
 adminRouter.post('/updateProductOffer',adminAuth,offerController.update_ProductOffer)
-adminRouter.post('/updateCategoryOffer',adminAuth,offerController.update_CategoryOffer)
-
+.post('/updateCategoryOffer',adminAuth,offerController.update_CategoryOffer)
 
 
 

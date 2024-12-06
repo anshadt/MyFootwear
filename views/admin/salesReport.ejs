@@ -8,6 +8,8 @@
                 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+                <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
                 <style>
                     .sidebar {
                         position: fixed;
@@ -370,6 +372,50 @@ body {
                                             </div>
                                         </div>
                                     </form>
+                                    <div id="recentOrdersSection">
+                                        <h2></h2>
+                                        <div id="recentOrdersContent">
+                                            <table class="table table-bordered" id="recentOrdersTable">
+                                              <thead>
+                                                <tr>
+                                                  <th>Order ID</th>
+                                                  <th>User Name</th>
+                                                  <th>Total Amount</th>
+                                                  <th>Discount Amount</th>
+                                                  <th>Order Date</th>
+                                                  <th>Net Sales</th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <% recentOrders.forEach(order => { %>
+                                                  <tr>
+                                                    <td><%= order.orderId %></td>
+                                                    <td><%= order.userName %></td>
+                                                    <td>₹<%= order.totalAmount.toFixed(2) %></td>
+                                                    <td>₹<%= order.couponDiscount.toFixed(2) %></td>
+                                                    <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
+                                                    <td>₹<%= order.netSales.toFixed(2) %></td>
+                                                  </tr>
+                                                <% }) %>
+                                              </tbody>
+                                            </table>
+                                            <div class="mt-4">
+                                              <h4>Statistics:</h4>
+                                              <div class="stat-box">
+                                                <p>Total Sales Count:</p>
+                                                <p><%= totalSalesCount %></p>
+                                              </div>
+                                              <div class="stat-box">
+                                                <p>Total Order Amount:</p>
+                                                <p>₹<%= totalOrderAmount.toFixed(2) %></p>
+                                              </div>
+                                              <div class="stat-box">
+                                                <p>Total Discount Applied:</p>
+                                                <p>₹<%= totalDiscountApplied.toFixed(2) %></p>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
 
                                     
                                     <div id="reportResults" class="mt-4"></div>
@@ -385,6 +431,35 @@ body {
         document.getElementById('salesReportForm').addEventListener('submit', function(e) {
           e.preventDefault();
           
+          const startDateInput = document.getElementById("startDate").valueAsDate;
+          const endDateInput = document.getElementById("endDate").valueAsDate;
+
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          const startDate = new Date(startDateInput);
+    startDate.setHours(0, 0, 0, 0);
+
+    // const endDate = new Date(endDateInput);
+    // endDate.setHours(0, 0, 0, 0);
+
+  if (startDate > today) {
+    swal({
+      title: "Invalid Start Date",
+      text: "The start date cannot be in the future.",
+      icon: "error",
+    });
+    return;
+  }
+
+  if (endDateInput < startDateInput) {
+    swal({
+      title: "Invalid End Date",
+      text: "The end date cannot be earlier than the start date.",
+      icon: "error",
+    });
+    return;
+  }
           const formData = new FormData(this);
           const reportType = formData.get('reportType');
           const loadingDiv = document.createElement('div');
@@ -412,6 +487,7 @@ body {
               if (!response.ok) {
                   throw new Error(`HTTP error! status: ${response.status}`);
               }
+
               if (reportType === 'json') {
                   return response.json();
               } else {
@@ -426,6 +502,7 @@ body {
               }
 
               if (reportType === 'json') {
+                document.getElementById('recentOrdersSection').style.display = 'none';
                   displayReportResults(data);
               } else {
                   downloadReport(data, reportType);
@@ -477,6 +554,7 @@ body {
                 <th>Order ID</th>
                 <th>User Name</th>
                 <th>Total Amount</th>
+                <th>Discount Amount</th>
                 <th>Order Date</th>
                 <th>Net Sales</th>
             </tr>
@@ -488,6 +566,7 @@ body {
                         <td>${order.orderId}</td>
                         <td>${order.userName}</td>
                         <td>₹${order.totalAmount.toFixed(2)}</td>
+                        <td>₹${order.couponDiscount.toFixed(2)}</td>
                         <td>${new Date(order.orderDate).toLocaleDateString()}</td>
                         <td>₹${order.netSales.toFixed(2)}</td>
                     </tr>
@@ -519,6 +598,19 @@ body {
     resultsContainer.innerHTML += statistics;
 
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+  const recentOrdersData = {
+    orders: JSON.parse(document.getElementById('recentOrdersData').textContent),
+    totalSalesCount: parseInt(document.getElementById('totalSalesCount').textContent),
+    totalOrderAmount: parseFloat(document.getElementById('totalOrderAmount').textContent),
+    totalDiscountApplied: parseFloat(document.getElementById('totalDiscountApplied').textContent),
+  };
+
+  displayReportResults(recentOrdersData, 'recentOrdersContent');
+});
+
+
     function updateRecentOrdersTable(recentOrders) {
           const tableBody = document.querySelector('#recentOrdersTable tbody');
           tableBody.innerHTML = '';
@@ -595,13 +687,32 @@ body {
           }
       };
 
-      function setDateRange(range) {
-          const { start, end } = quickRanges[range]();
-          document.getElementById('startDate').valueAsDate = start;
-          document.getElementById('endDate').valueAsDate = end;
+    //   function setDateRange(range) {
+    //       const { start, end } = quickRanges[range]();
+    //       document.getElementById('startDate').valueAsDate = start;
+    //       document.getElementById('endDate').valueAsDate = end;
         
 
-      }
+    //   }
+
+    function setDateRange(range) {
+  const { start, end } = quickRanges[range]();
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (start > today) {
+    swal({
+      title: "Invalid Date Range",
+      text: "The start date cannot be in the future.",
+      icon: "error",
+    });
+    return;
+  }
+
+  document.getElementById("startDate").valueAsDate = start;
+  document.getElementById("endDate").valueAsDate = end;
+}
       
       </script>
       

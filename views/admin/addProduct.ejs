@@ -238,101 +238,94 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
     
     <script>
-document.querySelector("form").addEventListener("submit", function() {
+document.querySelector("form").addEventListener("submit", function () {
   document.getElementById("specifications").value = JSON.stringify(specificationsArray);
 });
 
+let cropper;
+let currentImageInput;
 
-      let cropper;
-      let currentImageInput;
+function viewImage(event, previewId) {
+  const input = event.target;
+  const preview = document.getElementById(`preview${previewId}`);
+  currentImageInput = input;
 
-      function viewImage(event, previewId) {
-        const input = event.target;
-        const preview = document.getElementById(`preview${previewId}`);
-        currentImageInput = input;
-        
-        if (input.files && input.files[0]) {
-          const reader = new FileReader();
-          
-          reader.onload = function(e) {
-            $('#cropImage').attr('src', e.target.result);
-            $('#cropModal').modal('show');
-            
-            $('#cropModal').on('shown.bs.modal', function() {
-              if (cropper) {
-                cropper.destroy();
-              }
-              cropper = new Cropper(document.getElementById('cropImage'), {
-                aspectRatio: 1,
-                viewMode: 1,
-              });
-            });
-          }
-          
-          reader.readAsDataURL(input.files[0]);
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      $('#cropImage').attr('src', e.target.result);
+      $('#cropModal').modal('show');
+
+      $('#cropModal').on('shown.bs.modal', function () {
+        if (cropper) {
+          cropper.destroy();
         }
-      }
-
-      $('#cropButton').on('click', function() {
-        const croppedCanvas = cropper.getCroppedCanvas();
-        
-        
-        const whiteCanvas = document.createElement('canvas');
-        whiteCanvas.width = croppedCanvas.width;
-        whiteCanvas.height = croppedCanvas.height;
-        const ctx = whiteCanvas.getContext('2d');
-        
-        
-        ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, whiteCanvas.width, whiteCanvas.height);
-        
-        
-        ctx.drawImage(croppedCanvas, 0, 0);
-        
-        whiteCanvas.toBlob((blob) => {
-          const croppedImage = new File([blob], currentImageInput.files[0].name, {
-            type: 'image/jpeg',
-            lastModified: new Date().getTime()
-          });
-          
-          const dataTransfer = new DataTransfer();
-          dataTransfer.items.add(croppedImage);
-          currentImageInput.files = dataTransfer.files;
-          
-          const preview = document.getElementById(`preview${currentImageInput.id.slice(-1)}`);
-          preview.src = URL.createObjectURL(croppedImage);
-          preview.style.display = 'block';
-          
-          $('#cropModal').modal('hide');
-        }, 'image/jpeg', 0.95); 
+        cropper = new Cropper(document.getElementById('cropImage'), {
+          aspectRatio: 1,
+          viewMode: 1,
+        });
       });
+    };
 
+    reader.readAsDataURL(input.files[0]);
+  }
+}
 
-      function openSpecModal() {
+$('#cropButton').on('click', function () {
+  const croppedCanvas = cropper.getCroppedCanvas();
+
+  const whiteCanvas = document.createElement('canvas');
+  whiteCanvas.width = croppedCanvas.width;
+  whiteCanvas.height = croppedCanvas.height;
+  const ctx = whiteCanvas.getContext('2d');
+
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, whiteCanvas.width, whiteCanvas.height);
+
+  ctx.drawImage(croppedCanvas, 0, 0);
+
+  whiteCanvas.toBlob((blob) => {
+    const croppedImage = new File(
+      [blob],
+      currentImageInput.files[0].name,
+      {
+        type: 'image/jpeg',
+        lastModified: new Date().getTime(),
+      }
+    );
+
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(croppedImage);
+    currentImageInput.files = dataTransfer.files;
+
+    const preview = document.getElementById(`preview${currentImageInput.id.slice(-1)}`);
+    preview.src = URL.createObjectURL(croppedImage);
+    preview.style.display = 'block';
+
+    $('#cropModal').modal('hide');
+  }, 'image/jpeg', 0.95);
+});
+
+function openSpecModal() {
   $('#specModal').modal('show');
 }
 
-      
-      let specifications = []; 
-
+let specifications = [];
 
 function addSpec() {
   const key = document.getElementById('specKey').value.trim();
   const value = document.getElementById('specValue').value.trim();
 
   if (key && value) {
-    const newSpec = { key,value };
+    const newSpec = { key, value };
     specifications.push(newSpec);
 
-    
-
-   
     const specItem = document.createElement('li');
     specItem.classList.add('list-group-item');
     specItem.textContent = `${key}: ${value}`;
     document.getElementById('specList').appendChild(specItem);
 
-    
     document.getElementById('specKey').value = '';
     document.getElementById('specValue').value = '';
     $('#specModal').modal('hide');
@@ -341,175 +334,180 @@ function addSpec() {
   }
 }
 
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
 
-const MAX_FILE_SIZE = 2 * 1024 * 1024; 
-    const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('input[type="file"]').forEach((input, index) => {
+    const imageIndex = index + 1;
 
-    document.addEventListener("DOMContentLoaded", () => {
-       
-        document.getElementById('input1').addEventListener('change', function() {
-            validateImage(this, 1);
-        });
-
-        document.getElementById('input2').addEventListener('change', function() {
-            validateImage(this, 2);
-        });
-
-        document.getElementById('input3').addEventListener('change', function() {
-            validateImage(this, 3);
-        });
-
-        document.getElementById('input4').addEventListener('change', function() {
-            validateImage(this, 4);
-        });
+    // Attach validation
+    input.addEventListener('change', function () {
+      validateImage(this, imageIndex);
     });
 
-    
-    function validateImage(inputElement, imageIndex) {
-        const file = inputElement.files[0];
-        
-        if (file) {
-            if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-                Swal.fire({
-                    title: 'Error',
-                    text: `Image ${imageIndex} is not a valid image file. Please choose another file.`,
-                    icon: "error",
-                    confirmButtonText: "Okay"
-                }).then(() => {
-                    inputElement.value = ""; 
-                });
-                return;
-            }
+    // Add a "Clear" button
+    const clearButton = document.createElement("button");
+    clearButton.textContent = "Clear";
+    clearButton.type = "button";
+    clearButton.classList.add("btn", "btn-secondary", "btn-sm", "clear-button");
+    clearButton.style.marginLeft = "10px";
 
-            if (file.size > MAX_FILE_SIZE) {
-                Swal.fire({
-                    title: 'Error',
-                    text: `Image ${imageIndex} exceeds the 2MB size limit. Please choose another file.`,
-                    icon: "error",
-                    confirmButtonText: "Okay"
-                }).then(() => {
-                    inputElement.value = ""; 
-                });
-            }
-        }
+    // Attach click listener to clear the input and preview
+    clearButton.addEventListener("click", function () {
+      clearImage(input, imageIndex);
+    });
+
+    // Insert the clear button after the file input
+    input.parentNode.appendChild(clearButton);
+  });
+});
+
+function validateImage(inputElement, imageIndex) {
+  const file = inputElement.files[0];
+
+  if (file) {
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      Swal.fire({
+        title: "Error",
+        text: `Image ${imageIndex} is not a valid image file. Please choose another file.`,
+        icon: "error",
+        confirmButtonText: "Okay",
+      }).then(() => {
+        clearImage(inputElement, imageIndex);
+      });
+      return;
     }
 
+    if (file.size > MAX_FILE_SIZE) {
+      Swal.fire({
+        title: "Error",
+        text: `Image ${imageIndex} exceeds the 2MB size limit. Please choose another file.`,
+        icon: "error",
+        confirmButtonText: "Okay",
+      }).then(() => {
+        clearImage(inputElement, imageIndex);
+      });
+    }
+  }
+}
 
-   async function addProduct(event) {
-          event.preventDefault();
+function clearImage(inputElement, imageIndex) {
+  // Clear the input
+  inputElement.value = "";
 
-          const productName = document.getElementById('pname').value.trim();
-          const description = document.getElementById('dname').value.trim();
-          const Category_id = document.getElementById('category').value.trim();
-          const price = document.getElementById('price').value.trim();
-          const stock = document.getElementById('stock').value.trim();
+  // Clear the preview
+  const preview = document.getElementById(`preview${imageIndex}`);
+  if (preview) {
+    preview.src = "";
+    preview.style.display = "none";
+  }
+}
 
-        const productImage1 = document.getElementById('input1').files[0];
-        const productImage2 = document.getElementById('input2').files[0];
-        const productImage3 = document.getElementById('input3').files[0];
-        const productImage4 = document.getElementById('input4').files[0];
-       
+async function addProduct(event) {
+  event.preventDefault();
 
+  const productName = document.getElementById('pname').value.trim();
+  const description = document.getElementById('dname').value.trim();
+  const Category_id = document.getElementById('category').value.trim();
+  const price = document.getElementById('price').value.trim();
+  const stock = document.getElementById('stock').value.trim();
 
-          
-          if (productName && description && price && stock && productImage1 && productImage2 && productImage3 && productImage4) {
-             
-               if (description.trim().split(/\s+/).length > 30) {
-                  Swal.fire({
-                      title: 'Error',
-                      text: "Only 30 words allowed in description",
-                      icon: "error",
-                      confirmButtonText: "Okay"
-                  });
-                  return;
-              }
+  const productImage1 = document.getElementById('input1').files[0];
+  const productImage2 = document.getElementById('input2').files[0];
+  const productImage3 = document.getElementById('input3').files[0];
+  const productImage4 = document.getElementById('input4').files[0];
 
-              if (!/^\d+(\.\d{1,2})?$/.test(price) || parseFloat(price) <= 0) {
-                  Swal.fire({
-                      title: 'Error',
-                      text: "Please enter a valid price (positive number with up to two decimal places)",
-                      icon: "error",
-                      confirmButtonText: "Okay"
-                  });
-                  return;
-              }
-          
-              if (!/^\d+$/.test(stock) || parseInt(stock) < 0) {
-                  Swal.fire({
-                      title: 'Error',
-                      text: "Please enter a valid stock amount (non-negative integer)",
-                      icon: "error",
-                      confirmButtonText: "Okay"
-                  });
-                  return;
-              } 
-              
+  if (productName && description && price && stock && productImage1 && productImage2 && productImage3 && productImage4) {
+    if (description.trim().split(/\s+/).length > 30) {
+      Swal.fire({
+        title: 'Error',
+        text: "Only 30 words allowed in description",
+        icon: "error",
+        confirmButtonText: "Okay"
+      });
+      return;
+    }
 
-              
-              const formData = new FormData();
-              formData.append('productName', productName);
-              formData.append('Category_id', Category_id);
-              formData.append('description', description);
-              formData.append('price', price);
-              formData.append('stock', stock);
-              formData.append('productImage1', productImage1);
-              formData.append('productImage2', productImage2);
-              formData.append('productImage3', productImage3);
-              formData.append('productImage4', productImage4);
-              formData.append('specifications',JSON.stringify(specifications))
+    if (!/^\d+(\.\d{1,2})?$/.test(price) || parseFloat(price) <= 0) {
+      Swal.fire({
+        title: 'Error',
+        text: "Please enter a valid price (positive number with up to two decimal places)",
+        icon: "error",
+        confirmButtonText: "Okay"
+      });
+      return;
+    }
 
-             
+    if (!/^\d+$/.test(stock) || parseInt(stock) < 0) {
+      Swal.fire({
+        title: 'Error',
+        text: "Please enter a valid stock amount (non-negative integer)",
+        icon: "error",
+        confirmButtonText: "Okay"
+      });
+      return;
+    }
 
+    const formData = new FormData();
+    formData.append('productName', productName);
+    formData.append('Category_id', Category_id);
+    formData.append('description', description);
+    formData.append('price', price);
+    formData.append('stock', stock);
+    formData.append('productImage1', productImage1);
+    formData.append('productImage2', productImage2);
+    formData.append('productImage3', productImage3);
+    formData.append('productImage4', productImage4);
+    formData.append('specifications', JSON.stringify(specifications));
 
-              try {
-                  const response = await fetch("/admin/addProduct", {
-                      method: 'POST',
-                      body: formData
-                  });
-                  const data = await response.json();
-                  console.log(data);
-                  
-                  if (response.ok) { 
-                      if (data.success) {
-                          Swal.fire({
-                              title: 'Success',
-                              text: "Product added successfully",
-                              icon: "success",
-                              timer: 1000
-                          }).then(() => {
-                              window.location.href = '/admin/loadProuctPage';
-                          });
-                      } else if (data.error) {
-                          Swal.fire({
-                              title: "Error",
-                              text: data.error,
-                              icon: "error"
-                          });
-                      }
-                  } else {
-                      Swal.fire({
-                          title: "Oops!",
-                          text: "Server error: " + data.error,
-                          icon: "error"
-                      });
-                  }
-              } catch (error) {
-                  Swal.fire({
-                      title: "Oops!",
-                      text:"Something went wrong! Please try again",
-                      icon: "error"
-                  });
-              }
-           } else {
-              
-              Swal.fire({
-                  title: "Error",
-                  text: "Please fill all required fields",
-                  icon: "error",
-                  confirmButtonText: "Okay"
-              });
-          } 
+    try {
+      const response = await fetch("/admin/addProduct", {
+        method: 'POST',
+        body: formData
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        if (data.success) {
+          Swal.fire({
+            title: 'Success',
+            text: "Product added successfully",
+            icon: "success",
+            timer: 1000
+          }).then(() => {
+            window.location.href = '/admin/loadProuctPage';
+          });
+        } else if (data.error) {
+          Swal.fire({
+            title: "Error",
+            text: data.error,
+            icon: "error"
+          });
+        }
+      } else {
+        Swal.fire({
+          title: "Oops!",
+          text: "Server error: " + data.error,
+          icon: "error"
+        });
       }
+    } catch (error) {
+      Swal.fire({
+        title: "Oops!",
+        text: "Something went wrong! Please try again",
+        icon: "error"
+      });
+    }
+  } else {
+    Swal.fire({
+      title: "Error",
+      text: "Please fill all required fields",
+      icon: "error",
+      confirmButtonText: "Okay"
+    });
+  }
+}
 
 
 

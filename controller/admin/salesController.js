@@ -3,19 +3,60 @@ const PDFDocument = require('pdfkit');
 const ExcelJS = require('exceljs');
 const Coupon=require('../../models/couponModel')
 
+// const load_SalesReport = async (req, res) => {
+//   try {
+//     if (req.session.isAdmin) {
+//       res.render("admin/salesReport",{title:'Admin Dashboard'});
+//     } else {
+//       res.redirect("/admin/loadAdminDash");
+//     }
+//   } catch (error) {
+//     console.error(error);
+//         res.status(500).json({ err: "An error occured" });
+//   }
+   
+//   };
+
 const load_SalesReport = async (req, res) => {
   try {
     if (req.session.isAdmin) {
-      res.render("admin/salesReport",{title:'Admin Dashboard'});
+      // Fetch the last 10 recent orders
+      const recentOrders = await Order.find({})
+      .sort({ placedAt: -1 })
+      .limit(10)
+      .populate('user', 'username email')
+      .populate('items.product', 'productname')
+      .lean();
+      
+      const formattedOrders = recentOrders.map(order => ({
+        orderId: order.orderId,
+        orderDate: order.placedAt,
+        userName: order.user ? (order.user.username || order.user.email) : 'Unknown User',
+        totalAmount: order.totalAmount,
+        netSales: order.totalAmount - (order.discountAmount || 0),
+        couponDiscount: order.discountAmount || 0,
+      }));
+  
+      const totalSalesCount = formattedOrders.length;
+      const totalOrderAmount = formattedOrders.reduce((sum, order) => sum + order.totalAmount, 0);
+      const totalDiscountApplied = formattedOrders.reduce((sum, order) => sum + order.couponDiscount, 0);
+
+      res.render("admin/salesReport", {
+        title: 'Admin sales Report',
+      recentOrders: formattedOrders,
+      totalSalesCount,
+      totalOrderAmount,
+      totalDiscountApplied, // Pass recent orders to the view
+      });
     } else {
       res.redirect("/admin/loadAdminDash");
     }
   } catch (error) {
     console.error(error);
-        res.status(500).json({ err: "An error occured" });
+    res.status(500).json({ err: "An error occurred" });
   }
-   
-  };
+};
+
   
 
 const generateSalesReport = async (req, res) => {
@@ -58,7 +99,8 @@ const generateSalesReport = async (req, res) => {
               quantity: item.quantity,
               unitPrice: item.price / item.quantity,
               offerPrice: item.discountAmount || item.price,
-              lineTotal: (item.discountAmount || item.price) * item.quantity
+              lineTotal: (item.discountAmount || item.price) * item.quantity,
+              discount: item.discountAmount || 0 
           })),
           subtotal: order.items.reduce((sum, item) => sum + ((item.discountAmount || item.price) * item.quantity), 0),
           couponCode: order.couponCode || null,
@@ -163,7 +205,9 @@ function generatePDFReport(data) {
 
           
           const orderY = doc.y;
-          doc.rect(50, orderY, 495, 35).fill('#f8f9fa');
+          
+          doc.rect(50, orderY, 495, 35 + (order.items.length * 25) + (order.couponCode ? 75 : 50)).stroke('#000000');
+          doc.moveTo(50, orderY + 35).lineTo(545, orderY + 35).stroke('#000000'); 
           
           
           doc.fontSize(10).fillColor('#333');
@@ -176,8 +220,13 @@ function generatePDFReport(data) {
 
         
           const tableTop = doc.y;
-          doc.rect(50, tableTop, 495, 20).fill('#e3f2fd');
           
+
+          doc.rect(50, tableTop, 495, 20).fill('#e3f2fd').stroke('#000000');
+          
+          doc.strokeColor('#000000').lineWidth(1)
+             .moveTo(50, tableTop).lineTo(50, tableTop + 20).stroke() 
+             .moveTo(545, tableTop).lineTo(545, tableTop + 20).stroke();
           
           doc.fontSize(9).fillColor('#1a237e');
           doc.text('PRODUCT', 60, tableTop + 6, { width: 200 });
@@ -188,9 +237,18 @@ function generatePDFReport(data) {
           
           let currentY = tableTop + 20;
           order.items.forEach((item, index) => {
-              doc.rect(50, currentY, 495, 25)
-                 .fill(index % 2 === 0 ? '#ffffff' : '#f5f5f5');
               
+
+              doc.rect(50, currentY, 495, 25)
+              .fill(index % 2 === 0 ? '#ffffff' : '#f5f5f5').stroke('#000000');
+
+                 
+
+                 doc.strokeColor('#000000').lineWidth(1)
+                 .moveTo(50, currentY).lineTo(50, currentY + 25).stroke() 
+                 .moveTo(545, currentY).lineTo(545, currentY + 25).stroke() 
+                 .moveTo(50, currentY + 25).lineTo(545, currentY + 25).stroke();
+
               doc.fontSize(9).fillColor('#444');
               doc.text(item.productName, 60, currentY + 8, { width: 200 });
               doc.text(item.quantity.toString(), 270, currentY + 8, { width: 50, align: 'center' });
@@ -201,13 +259,20 @@ function generatePDFReport(data) {
           });
 
           
-          doc.rect(50, currentY, 495, order.couponCode ? 75 : 50).fill('#f8f9fa');
+         
+
+         doc.rect(50, currentY, 495, order.couponCode ? 75 : 50).fill('#f8f9fa').stroke('#000000');
           
         
           doc.fontSize(9).fillColor('#666');
           doc.text('Subtotal:', 350, currentY + 10, { width: 70, align: 'right' });
           doc.fillColor('#333')
              .text(`${order.subtotal.toFixed(2)}`, 420, currentY + 10, { width: 80, align: 'right' });
+
+            
+            doc.strokeColor('#000000').lineWidth(1)
+            .moveTo(50, currentY).lineTo(50, currentY + 30).stroke()  
+            .moveTo(545, currentY).lineTo(545, currentY + 30).stroke()
 
           if (order.couponCode) {
               doc.fillColor('#666')
@@ -221,14 +286,27 @@ function generatePDFReport(data) {
           doc.fillColor('#666')
              .text("50.00", 420, currentY + 25, { width: 80, align: 'right' });
 
+             
+             
+
           doc.moveDown(3);
+          doc.strokeColor('#000000').lineWidth(1)
+             .moveTo(50, currentY).lineTo(50, currentY + 35).stroke()  
+             .moveTo(545, currentY).lineTo(545, currentY + 35).stroke()
 
           doc.fontSize(10).fillColor('#1a237e')
              .text('Total Amount:', 350, currentY + 40, { width: 70, align: 'right' });
           doc.fillColor('#1a237e')
              .text(`${order.totalAmount.toFixed(2)}`, 420, currentY + 40, { width: 80, align: 'right' });
 
+             
+
           doc.moveDown(3);
+          doc.strokeColor('#000000').lineWidth(1)
+          .moveTo(50, currentY).lineTo(50, currentY + 55).stroke()  
+          .moveTo(545, currentY).lineTo(545, currentY + 55).stroke()
+
+          doc.strokeColor('#000000').lineWidth(0.8).moveTo(50, currentY + 55).lineTo(545, currentY + 55).stroke();
       });
 
       
