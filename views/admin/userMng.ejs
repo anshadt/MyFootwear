@@ -11,8 +11,7 @@
     <!-- SweetAlert2 CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
-<!-- SweetAlert2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
     <style>
         
@@ -241,18 +240,13 @@
                                           <span class="badge bg-success">Active</span>
                                         <% } %>
                                       </td>
-                                    <td>
-                                        <% if (users.isBlocked){%>
-                                        <a href="/admin/block-user/<%= users._id %>" class="btn btn-success" type="submit"onclick="return confirm('Do you Want to Block <%= users.name %>?')">UnBlock</a>
-                                      
+                                      <td>
+                                        <% if (users.isBlocked){ %>
+                                          <a href="/admin/block-user/<%= users._id %>" class="btn btn-success unblock-btn" data-name="<%= users.name %>" data-id="<%= users._id %>">UnBlock</a>
                                         <% } else { %>
-                                     
-                                        <a href="/admin/unblock-user/<%= users._id %>" class="btn btn-danger" type="submit"onclick="return confirm('Do you Want to UnBlock <%= users.name %>?')">Block</a>
-                
-                                    <% } %>
-                                    
-                                    
-                                    </td> 
+                                          <a href="/admin/unblock-user/<%= users._id %>" class="btn btn-danger block-btn" data-name="<%= users.name %>" data-id="<%= users._id %>">Block</a>
+                                        <% } %>
+                                      </td>
                                 </tr>
                             <% }) %>
                         <% } else { %>
@@ -337,6 +331,38 @@
             window.location.href = window.location.pathname;
         }
     });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+      // Event listener for "UnBlock" and "Block" buttons
+      document.querySelectorAll('.unblock-btn, .block-btn').forEach(button => {
+        button.addEventListener('click', function(event) {
+          event.preventDefault();  // Prevent the default link action
+          
+          const userName = this.getAttribute('data-name');
+          const userId = this.getAttribute('data-id');
+          const isUnblock = this.classList.contains('unblock-btn');
+          
+          const actionText = isUnblock ? 'UnBlock' : 'Block';
+          const actionUrl = isUnblock ? '/admin/block-user/' : '/admin/unblock-user/';
+          
+          // Show SweetAlert2 confirmation
+          Swal.fire({
+            title: `Are you sure you want to ${actionText} ${userName}?`,
+            text: `This action will ${actionText.toLowerCase()} the user.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: isUnblock ? 'Yes, UnBlock!' : 'Yes, Block!',
+            cancelButtonText: 'Cancel'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Redirect to the appropriate URL after confirmation
+              window.location.href = `${actionUrl}${userId}`;
+            }
+          });
+        });
+      });
     </script>
 
     
