@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <style>
         
         .form-container {
@@ -164,6 +165,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         let cropper;
@@ -172,7 +174,41 @@
         
         $('.image-input').on('change', function(event) {
             const file = event.target.files[0];
-            currentImageInput = $(this);
+            currentImageInput = $(this)
+            if (!file) {
+        Swal.fire({
+            title: 'No File Selected',
+            text: 'Please select a valid image file.',
+            icon: 'error'
+        });
+        return;
+    }
+
+
+            const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            const maxFileSize = 2 * 1024 * 1024; // 2MB
+
+            if (!validImageTypes.includes(file.type)) {
+        Swal.fire({
+            title: 'Invalid File Type',
+            text: 'Only image files (JPEG, PNG, GIF, or WebP) are allowed.',
+            icon: 'error'
+        });
+        event.target.value = '';
+        return;
+
+        if (file.size > maxFileSize) {
+        Swal.fire({
+            title: 'File Too Large',
+            text: 'Please select an image smaller than 2MB.',
+            icon: 'error'
+        });
+        event.target.value = '';
+        return;
+    }
+
+    }
+
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -182,6 +218,9 @@
                 reader.readAsDataURL(file);
             }
         });
+
+       
+
 
        
         $('#cropperModal').on('shown.bs.modal', function () {
@@ -255,6 +294,56 @@
             });
         });
     </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          document.querySelectorAll('.image-input').forEach((input) => {
+            input.addEventListener('change', (event) => {
+              const file = event.target.files[0];
+              const targetId = event.target.getAttribute('data-target');
+      
+              console.log("Processing file:", file); // Debugging
+      
+              if (file) {
+                const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      
+                if (!validImageTypes.includes(file.type)) {
+                  swal({
+                    title: 'Invalid File Type',
+                    text: 'Please select a valid image file (JPEG, PNG, GIF, or WebP).',
+                    icon: 'error',
+                  });
+                  event.target.value = ''; // Clear the invalid input
+                  return;
+                }
+      
+                if (file.size > 2 * 1024 * 1024) {
+                  swal({
+                    title: 'File Too Large',
+                    text: 'Please select an image smaller than 2MB.',
+                    icon: 'error',
+                  });
+                  event.target.value = ''; // Clear the invalid input
+                  return;
+                }
+      
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                  const imgElement = document.getElementById(targetId);
+                  if (imgElement) {
+                    imgElement.src = e.target.result; // Update image preview
+                    console.log("Image preview updated"); // Debugging
+                  }
+                };
+                reader.readAsDataURL(file);
+              }
+            });
+          });
+        });
+      </script>
+      
+
+      
     
 </body>
 

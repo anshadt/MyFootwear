@@ -4,19 +4,6 @@ const ExcelJS = require('exceljs');
 const Coupon=require('../../models/couponModel')
 const cart = require('../../models/cartModel')
 
-// const load_SalesReport = async (req, res) => {
-//   try {
-//     if (req.session.isAdmin) {
-//       res.render("admin/salesReport",{title:'Admin Dashboard'});
-//     } else {
-//       res.redirect("/admin/loadAdminDash");
-//     }
-//   } catch (error) {
-//     console.error(error);
-//         res.status(500).json({ err: "An error occured" });
-//   }
-   
-//   };
 
 const load_SalesReport = async (req, res) => {
   try {
@@ -30,8 +17,7 @@ const load_SalesReport = async (req, res) => {
       .lean();
       
       const deliveryCharges = 50;
-      //let taxAmount = 0;
-      //const taxAmount = order.taxAmount || 0;
+      
       const formattedOrders = recentOrders.map(order => ({
         orderId: order.orderId,
         orderDate: order.placedAt,
@@ -53,7 +39,7 @@ const load_SalesReport = async (req, res) => {
       totalSalesCount,
       totalOrderAmount,
       totalDiscountApplied,
-        deliveryCharges, // Pass recent orders to the view
+        deliveryCharges, 
       });
     } else {
       res.redirect("/admin/loadAdminDash");
