@@ -13,6 +13,7 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"/>
     <link rel="stylesheet" href="/public/style.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     
     <style>
       .divider:after,
@@ -99,6 +100,7 @@
     <!-- Bootstrap JS and Dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
       function userLogin(event) {
           event.preventDefault();
@@ -152,6 +154,19 @@
           });
       }
   </script>
+
+<script>
+  // Check for 'blocked' query parameter in the URL
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has('blocked')) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Access Denied',
+      text: 'Your account has been blocked.',
+      confirmButtonText: 'OK'
+    });
+  }
+</script>
   
   
   </body>

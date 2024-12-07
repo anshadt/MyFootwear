@@ -6,7 +6,11 @@ const Coupon=require('../../models/couponModel')
 const load_CouponPage=async(req,res)=>{
     try {
         const coupon=await Coupon.find()
+        if(req.session.isAdmin){
         res.render('admin/couponMng',{coupon,title:"Coupon Management"})
+    }else{
+        return res.redirect('/admin/login')
+    }
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -29,7 +33,7 @@ const add_Coupon = async (req, res) => {
         if (!discount_percentage || isNaN(discount_percentage)) {
             return res.json({ success: false, error: 'Discount must be a valid number.' });
         }
-        if (discount_percentage < 1 || discount_percentage > 100) {
+        if (discount_percentage == 0 || discount_percentage < 1 || discount_percentage > 100) {
             return res.json({ success: false, error: 'Discount must be between 1 and 100.' });
         }
         if (discount_percentage !== Math.floor(discount_percentage)) {
@@ -39,8 +43,8 @@ const add_Coupon = async (req, res) => {
         if (!start_date) {
             return res.json({ success: false, error: 'Start date is required.' });
         }
-        if (start_date < currentDate) {
-            return res.json({ success: false, error: 'Start date is empty or cannot be in the past.' });
+        if (start_date != currentDate) {
+            return res.json({ success: false, error: 'Start date is empty or cannot be in the past or future.' });
         }
         if (!expiry_date) {
             return res.json({ success: false, error: 'Expiry date is required.' });
@@ -51,6 +55,9 @@ const add_Coupon = async (req, res) => {
         }
         if (!min_amount || isNaN(min_amount) || parseInt(min_amount) <= 0) {
             return res.json({ success: false, error: 'Minimum amount must be a valid number greater than zero.' });
+        }
+        if (!min_amount || isNaN(min_amount) || parseInt(min_amount) > parseInt(max_amount)) {
+            return res.json({ success: false, error: 'Minimum amount must be a lesser than maximum amount.' });
         }
         if (!max_amount || isNaN(max_amount) || parseInt(max_amount) <= 0) {
             return res.json({ success: false, error: 'Maximum amount must be a valid number greater than zero.' });
@@ -134,6 +141,10 @@ const edit_Coupon= async (req,res)=>{
           if (parseInt(min_amount) === 0) {
              return res.json({success:false,error:'Min Amount cannot be zero.'})
           }
+
+          if (parseInt(min_amount) > parseInt(max_amount)) {
+            return res.json({success:false,error:'Min Amount cannot be greater than max amount.'})
+         }
 
           if(!max_amount){
             return res.json({success:false,error:'coupon maxAmount is empty'})

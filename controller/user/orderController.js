@@ -83,7 +83,7 @@ const place_Order = async (req, res) => {
       }
     }
    let fixed = 50;
-    let totalAmount = cart.total_price + fixed;
+    let totalAmount = cart.total_price 
     let discountAmount = 0;
     let offerAmount=0
 
@@ -91,7 +91,7 @@ const place_Order = async (req, res) => {
       const coupon = await Coupon.findOne({ coupon_code: couponCode, isDeleted: false });
 
       if (coupon) {
-        discountAmount = (totalAmount * coupon.discount) / 100;
+        discountAmount =  Math.floor(totalAmount * coupon.discount) / 100;
         totalAmount -= discountAmount;
       }
     }
@@ -101,6 +101,8 @@ const place_Order = async (req, res) => {
       if(product.offer){
         offerAmount=product.price * (product.offer.offerPercentage)/100
       }
+      const tax = Math.floor(totalAmount * 0.05);
+    totalAmount += tax + fixed;
       
     if(totalAmount > 1000){
       return res.json({success:false,message:'above 1000 is not allowed cash of delivery'})
@@ -130,6 +132,7 @@ const place_Order = async (req, res) => {
       invoiceNumber:invoiceNumber,
       user: req.session.userId,
       address: addressOrder,
+      taxAmount: tax,
       items: cart.items.map((item) => ({
         product: item.product._id,
         quantity: item.quantity,
@@ -162,6 +165,7 @@ const place_Order = async (req, res) => {
       success:true,
       message: "Order placed successfully",
       order: newOrder,
+       tax: `Tax Applied: ₹${tax.toFixed(2)}`,
       discountAmount: discountAmount > 0 ? `Discount Applied: ₹${discountAmount}` : "No Discount",
     });
     
@@ -419,22 +423,25 @@ const razor_PayOrderCreate = async (req, res) => {
         });
       }
     }
-    let totalAmount = cart.total_price + 50;
+    let totalAmount = cart.total_price;
     let discountAmount = 0;
 
     if (couponCode) {
       const coupon = await Coupon.findOne({ coupon_code: couponCode, isDeleted: false });
       if (coupon) {
-        discountAmount = (totalAmount * coupon.discount) / 100;
+        discountAmount =Math.floor (totalAmount * coupon.discount) / 100;
         totalAmount -= discountAmount;
       }
     }
+
     const options = {
       amount: Math.round(totalAmount * 100),
       currency: 'INR',
       receipt: `receipt#${totalAmount+'Anshad'}`,
       payment_capture: 1,
     };
+    const tax = Math.floor(totalAmount * 0.05)+ 50;
+    totalAmount += tax;
 
     const razorpayOrder = await Razorpay.orders.create(options);
     return res.json({
@@ -443,6 +450,7 @@ const razor_PayOrderCreate = async (req, res) => {
       totalAmount,
       discountAmount,
       payableAmount: totalAmount*100,
+      tax: `Tax Applied: ₹${tax.toFixed(2)}`,
     });
   } catch (error) {
     console.error('Error creating Razorpay order:', error);
@@ -478,17 +486,19 @@ const wallet_PayOrderCreate = async (req, res) => {
       }
     }
 
-    let totalAmount = cart.total_price + 50; 
+    let totalAmount = cart.total_price; 
     let discountAmount = 0;
 
     
     if (couponCode) {
       const coupon = await Coupon.findOne({ coupon_code: couponCode, isDeleted: false });
       if (coupon) {
-        discountAmount = (totalAmount * coupon.discount) / 100;
+        discountAmount = Math.floor(totalAmount * coupon.discount) / 100;
         totalAmount -= discountAmount;
       }
     }
+    const tax = Math.floor(totalAmount * 0.05)+ 50;
+    totalAmount += tax;
 
     
     const userWallet = await Wallet.findOne({ user: req.session.userId });
@@ -525,6 +535,7 @@ const wallet_PayOrderCreate = async (req, res) => {
       payableAmount: totalAmount * 100, 
       walletDeduction, 
       remainingAmount, 
+      tax: `Tax Applied: ₹${tax.toFixed(2)}`,
     });
   } catch (error) {
     console.error('Error creating Razorpay order:', error);
@@ -549,16 +560,18 @@ const razorPay_payment = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Cart is empty' });
     }
 
-    let totalAmount = cart.total_price + 50; 
+    let totalAmount = cart.total_price; 
     let discountAmount = 0;
 
     if (couponCode) {
       const coupon = await Coupon.findOne({ coupon_code: couponCode, isDeleted: false });
       if (coupon) {
-        discountAmount = (totalAmount * coupon.discount) / 100;
+        discountAmount = Math.floor(totalAmount * coupon.discount) / 100;
         totalAmount -= discountAmount;
       }
     }
+    const tax = Math.floor(totalAmount * 0.05);
+    totalAmount += tax + 50;
 
     
     const userWallet = await Wallet.findOne({ user: req.session.userId });
@@ -607,6 +620,7 @@ const razorPay_payment = async (req, res) => {
       })),
       paymentMethod: paymentMethod === 'cod' ? 'Cash on Delivery' : 'Bank Transfer',
       totalAmount: totalAmount,
+      taxAmount: tax,
       discountAmount: discountAmount,
       paymentStatus: paymentVerified ? 'Paid' : 'Failed',
       orderStatusTimestamps: {
@@ -647,6 +661,7 @@ const razorPay_payment = async (req, res) => {
         success: true,
         message: 'Payment verified and order created successfully',
         order: newOrder,
+        tax: `Tax Applied: ₹${tax.toFixed(2)}`,
       });
     } else {
       return res.json({

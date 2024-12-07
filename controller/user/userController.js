@@ -22,25 +22,25 @@ const InvoiceCounter = require('../../models/invoiceCounterModel');
 
 async function generateInvoiceNumber() {
   try {
-    console.log('first')
+    
       const currentYear = new Date().getFullYear();
       let counter = await InvoiceCounter.findOne({ year: currentYear }).exec();
-      console.log('first2')
+      
       if (!counter) {
-        console.log('first3')
+        
           counter = new InvoiceCounter({ 
               year: currentYear,
               sequence: 0 
           });
       }
-      console.log('first4')
+      
       counter.sequence += 1;
-      console.log('first5')
+      
       await counter.save();
-      console.log('first6')
+      
     
       const invoiceNumber = `AFC-${currentYear}-${counter.sequence.toString().padStart(5, '0')}`;
-      console.log('first7')
+      
       return invoiceNumber;
   } catch (error) {
       console.error('Error generating invoice number:', error);
@@ -833,7 +833,10 @@ const loadUserHomePage = async (req, res) => {
   
               
               const subtotalPosition = position + 30;
-              
+              const taxAmount = Math.floor(total * 0.05);
+              const discountAmount = order.discountAmount
+                ? order.discountAmount.toFixed(2)
+                : '0.00';
               
               doc.font('Helvetica-Bold');
               
@@ -841,20 +844,26 @@ const loadUserHomePage = async (req, res) => {
               doc.text('Subtotal:', 350, subtotalPosition)
                  .text(`${total.toFixed(2)}`, 480, subtotalPosition, { align: 'right' });
 
-                 const discount = order.discountAmount ? order.discountAmount.toFixed(2) : '0.00';
-              doc.text('Discount:', 350, subtotalPosition + 20)
-              .text(`-${discount}`, 480, subtotalPosition + 20, { align: 'right' });
+              //    const discount = order.discountAmount ? order.discountAmount.toFixed(2) : '0.00';
+              // doc.text('Discount:', 350, subtotalPosition + 20)
+              // .text(`-${discount}`, 480, subtotalPosition + 20, { align: 'right' });
+
+              doc.text('Tax (5%):', 350, subtotalPosition + 20)
+                .text(`+${taxAmount.toFixed(2)}`, 480, subtotalPosition + 20, { align: 'right' });
+
+                doc.text('Coupon Discount:', 350, subtotalPosition + 40)
+                .text(`-${discountAmount}`, 480, subtotalPosition + 40, { align: 'right' });
                
               const deliveryCharge = 50;
-              doc.text('Delivery Charge:', 350, subtotalPosition + 40)
-             .text(`+${deliveryCharge.toFixed(2)}`, 480, subtotalPosition + 40, { align: 'right' });
+              doc.text('Delivery Charge:', 350, subtotalPosition + 60)
+             .text(`+${deliveryCharge.toFixed(2)}`, 480, subtotalPosition + 60, { align: 'right' });
 
               
-              generateHr(doc, subtotalPosition + 60);
+              generateHr(doc, subtotalPosition + 80);
   
               doc.fontSize(12)
-                 .text('Grand Total:', 350, subtotalPosition + 70)
-                 .text(`${order.totalAmount.toFixed(2)}`, 480, subtotalPosition + 70, { align: 'right' });
+                 .text('Grand Total:', 350, subtotalPosition + 90)
+                 .text(`${order.totalAmount.toFixed(2)}`, 480, subtotalPosition + 90, { align: 'right' });
   
               
               doc.font('Helvetica')

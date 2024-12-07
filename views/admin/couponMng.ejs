@@ -51,6 +51,18 @@
         .navbar-toggler {
             border: none;
         }
+        .filter-icon {
+    cursor: pointer;
+    font-size: 18px;
+    margin-left: 5px;
+}
+
+.filter-clear {
+    cursor: pointer;
+    font-size: 18px;
+    margin-left: 5px;
+    color: red;
+}
 
        
         @media (min-width: 768px) {
@@ -153,8 +165,25 @@
                             <th scope="col">SL</th>
                             <th scope="col">Coupon Desc</th>
                             <th scope="col">Coupon Code</th>
-                            <th scope="col">Start-Date</th>
-                            <th scope="col">End-Date</th>
+                            <th scope="col">
+                              Start-Date
+                              <span class="filter-icon" id="startDateToggle" data-bs-toggle="collapse" data-bs-target="#startDateFilter">
+                                  <i class="bi bi-chevron-down"></i>
+                              </span>
+                              <div class="collapse" id="startDateFilter">
+                                  <input type="date" class="form-control" id="startDateFilterInput" />
+                              </div>
+                          </th>
+                          <th scope="col">
+                              End-Date
+                              <span class="filter-icon" id="endDateToggle" data-bs-toggle="collapse" data-bs-target="#endDateFilter">
+                                  <i class="bi bi-chevron-down"></i>
+                              </span>
+                              <div class="collapse" id="endDateFilter">
+                                  <input type="date" class="form-control" id="endDateFilterInput" />
+                              </div>
+                          </th>
+                          
                             <th scope="col">Disc%</th>
                             <th scope="col">Min Amt</th>
                             <th scope="col">Max Amt</th>
@@ -337,7 +366,7 @@
             const min_amount= parseInt(form.addMinAmt.value.trim())
             const max_amount=parseInt(form.addMaxAmt.value.trim())
 
-            if(!coupon_code || !description || !start_date || !expiry_date || !discount_percentage || !min_amount || !max_amount){
+            if(!coupon_code || !description || !start_date || !expiry_date || discount_percentage === "" || !min_amount || !max_amount){
                 Swal.fire({
                 icon: 'error',
                 title: 'Validation Error',
@@ -559,6 +588,139 @@ function cancelCoupon(couponId) {
 
     </script>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    // Toggle the icon between down arrow and X
+    function toggleIcon(toggleElement) {
+        const icon = toggleElement.querySelector('i');
+        if (icon.classList.contains('bi-chevron-down')) {
+            icon.classList.replace('bi-chevron-down', 'bi-x');
+        } else {
+            icon.classList.replace('bi-x', 'bi-chevron-down');
+        }
+    }
+
+    // Date filter functionality
+    function filterCoupons() {
+        const startDateInput = document.getElementById('startDateFilterInput');
+        const endDateInput = document.getElementById('endDateFilterInput');
+        
+        const startDate = startDateInput.value ? new Date(startDateInput.value) : null;
+        const endDate = endDateInput.value ? new Date(endDateInput.value) : null;
+        
+        const today = new Date();
+        if (startDate && startDate > today) {
+            Swal.fire({
+                title: 'Invalid Start Date',
+                text: 'Start Date cannot be in the future.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return; // Prevent further filtering if start date is in the future
+        }
+
+        // Validate: Ensure start date is not greater than end date
+        if (startDate && endDate && startDate > endDate) {
+            Swal.fire({
+                title: 'Invalid Date Range',
+                text: 'Start Date cannot be greater than End Date.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return; // Prevent further filtering if dates are invalid
+        }
+
+        // Validate: If start date is missing, show Swal and disable end date
+        if (!startDate) {
+            endDateInput.disabled = true;
+            return; // Prevent further filtering if start date is not provided
+        } else {
+            // Enable end date once a valid start date is provided
+            endDateInput.disabled = false;
+        }
+
+
+        const rows = document.querySelectorAll('table tbody tr');
+
+        rows.forEach(row => {
+            const couponStartDateStr = row.cells[3].textContent; // Start Date cell
+            const couponEndDateStr = row.cells[4].textContent; // End Date cell
+
+            const couponStartDate = new Date(couponStartDateStr.split('/').reverse().join('/')); // Format it to Date
+            const couponEndDate = new Date(couponEndDateStr.split('/').reverse().join('/')); // Format it to Date
+
+            let isVisible = true;
+
+            if (startDate && couponStartDate < startDate) {
+                isVisible = false;
+            }
+
+            if (endDate && couponEndDate > endDate) {
+                isVisible = false;
+            }
+
+            row.style.display = isVisible ? '' : 'none';
+        });
+    }
+
+    // Event listeners for toggling the filter icons
+    const startDateToggle = document.getElementById('startDateToggle');
+    const endDateToggle = document.getElementById('endDateToggle');
+    
+    startDateToggle.addEventListener('click', () => {
+        toggleIcon(startDateToggle); // Toggle the icon for Start Date
+    });
+
+    endDateToggle.addEventListener('click', () => {
+        toggleIcon(endDateToggle); // Toggle the icon for End Date
+    });
+
+    // Event listeners for enabling/disabling the date inputs and clearing on X click
+    const filterStartDate = document.getElementById('startDateFilterInput');
+    const filterEndDate = document.getElementById('endDateFilterInput');
+
+    // Enable date inputs after clicking down arrow
+    filterStartDate.disabled = false;
+    filterEndDate.disabled = false;
+
+    // Disable the date inputs after selecting a date
+    filterStartDate.addEventListener('change', () => {
+        
+        filterEndDate.disabled = false; // Enable end date input
+        filterCoupons();
+    });
+
+    filterEndDate.addEventListener('change', () => {
+        filterEndDate.disabled = false;
+        filterCoupons();
+    });
+
+    // When clicking X, reset the filter and enable inputs again
+    startDateToggle.addEventListener('click', () => {
+        const icon = startDateToggle.querySelector('i');
+        if (icon.classList.contains('bi-x')) {
+            filterStartDate.value = ''; // Clear start date
+            filterEndDate.value = '';   // Clear end date
+            filterStartDate.disabled = false; // Enable start date input
+            filterEndDate.disabled = false;   // Enable end date input
+            toggleIcon(startDateToggle); // Switch back to down arrow
+            filterCoupons(); // Show all data
+        }
+    });
+
+    endDateToggle.addEventListener('click', () => {
+        const icon = endDateToggle.querySelector('i');
+        if (icon.classList.contains('bi-x')) {
+            filterEndDate.value = ''; // Clear end date
+            filterStartDate.disabled = false; // Enable start date input
+            filterEndDate.disabled = false;   // Enable end date input
+            toggleIcon(endDateToggle); // Switch back to down arrow
+            filterCoupons(); // Show all data
+        }
+    });
+});
+
+  </script>
 </body>
 
 </html>

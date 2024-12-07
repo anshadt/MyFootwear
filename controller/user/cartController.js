@@ -190,8 +190,9 @@ const checkOutPage= async(req,res)=>{
         if (!wallet) {
           wallet = { balanceAmount: 0 }; 
         }
+        const tax =Math.floor(total_price * 0.05);
         const cartData = cart || { items: [], total_price: 0 };
-    res.render('user/checkOutPage',{cart: cartData,address,wishlistCount,cartCount,user,availableCoupons,charges,wallet})
+    res.render('user/checkOutPage',{cart: cartData,address,wishlistCount,cartCount,user,availableCoupons,charges,wallet, tax})
 } catch (error) {
     console.error('Error fetching cart:', error); 
 res.status(500).send('Something went wrong!');

@@ -214,7 +214,7 @@ const Order_Wallet = async (req, res) => {
       }
     }
 
-    let totalAmount = cart.total_price + 50; 
+    let totalAmount = cart.total_price; 
     let discountAmount = 0;
     let offerAmount = 0;
 
@@ -232,6 +232,9 @@ const Order_Wallet = async (req, res) => {
     if (Product.offer) {
       offerAmount = Product.price * (Product.offer.offerPercentage) / 100;
     }
+
+    const tax = Math.floor(totalAmount * 0.05);
+    totalAmount += tax + 50;
 
    
     const walletBalance = wallet.balanceAmount;
@@ -284,6 +287,7 @@ const Order_Wallet = async (req, res) => {
       invoiceNumber: invoiceNumber,
       user: req.session.userId,
       address: addressOrder,
+      taxAmount: tax,
       items: cart.items.map(item => ({
         product: item.product._id,
         quantity: item.quantity,
@@ -326,6 +330,7 @@ const Order_Wallet = async (req, res) => {
     
     res.status(201).json({
       success: true,
+      tax: `Tax Applied: ₹${tax.toFixed(2)}`,
       message: "Order placed successfully using wallet",
       order: newOrder,
     });

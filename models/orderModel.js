@@ -116,6 +116,10 @@ const orderSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
       },
+      taxAmount: {
+        type: Number,
+        default: 0
+    },
 
     
 }, { timestamps: true });

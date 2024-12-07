@@ -2,6 +2,7 @@ const Order=require('../../models/orderModel')
 const PDFDocument = require('pdfkit');
 const ExcelJS = require('exceljs');
 const Coupon=require('../../models/couponModel')
+const cart = require('../../models/cartModel')
 
 // const load_SalesReport = async (req, res) => {
 //   try {
@@ -28,13 +29,18 @@ const load_SalesReport = async (req, res) => {
       .populate('items.product', 'productname')
       .lean();
       
+      const deliveryCharges = 50;
+      //let taxAmount = 0;
+      //const taxAmount = order.taxAmount || 0;
       const formattedOrders = recentOrders.map(order => ({
         orderId: order.orderId,
         orderDate: order.placedAt,
         userName: order.user ? (order.user.username || order.user.email) : 'Unknown User',
         totalAmount: order.totalAmount,
-        netSales: order.totalAmount - (order.discountAmount || 0),
+        taxAmount: order.taxAmount,
+        netSales: order.totalAmount - (order.discountAmount || 0) +  order.taxAmount + deliveryCharges,
         couponDiscount: order.discountAmount || 0,
+        
       }));
   
       const totalSalesCount = formattedOrders.length;
@@ -46,7 +52,8 @@ const load_SalesReport = async (req, res) => {
       recentOrders: formattedOrders,
       totalSalesCount,
       totalOrderAmount,
-      totalDiscountApplied, // Pass recent orders to the view
+      totalDiscountApplied,
+        deliveryCharges, // Pass recent orders to the view
       });
     } else {
       res.redirect("/admin/loadAdminDash");
@@ -87,13 +94,15 @@ const generateSalesReport = async (req, res) => {
       
       const reportData = calculateReportData(orders);
 
-      
+      const deliveryCharges = 50;
       reportData.orders = orders.map(order => ({
           orderId: order.orderId,
           orderDate: order.placedAt,
           userName: order.user ? (order.user.username || order.user.email) : 'Unknown User',
           totalAmount: order.totalAmount,
-          netSales: order.totalAmount - (order.discountAmount || 0), 
+          taxAmount: order.taxAmount, 
+          deliveryCharges, 
+          netSales: order.totalAmount - (order.discountAmount || 0) + order.taxAmount + 50,  
           items: order.items.map(item => ({
             productName: item.product ? item.product.productname : 'Unknown Product',
               quantity: item.quantity,

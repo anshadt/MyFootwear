@@ -14,14 +14,14 @@
                 <h5 class="card-title">Order ID: <%= order.orderId %></h5>
                 <p class="card-text">User: <%= order.user.name %> (<%= order.user.email %>)</p>
                 <p class="card-text">Status: <%= order.orderStatus %></p>
-                <p class="card-text">Total Amount: $<%= order.totalAmount.toFixed(2) %></p>
+                <p class="card-text">Total Amount: ₹<%= order.totalAmount.toFixed(2) %></p>
                 <p class="card-text">Date: <%= order.createdAt.toLocaleString() %></p>
 
                 <h6 class="mt-4">Items:</h6>
                 <ul class="list-group">
                     <% order.items.forEach(item => { %>
                         <li class="list-group-item">
-                            <%= item.product.productname %> - Quantity: <%= item.quantity %> - Price: $<%= item.price.toFixed(2) %>
+                            <%= item.product.productname %> - Quantity: <%= item.quantity %> - Price: ₹<%= item.price.toFixed(2) %>
                         </li>
                         <li>
                             <img src="<%= item.product.images[0] %>" alt="<%= item.product.productname %>" class="order-image" width="100px">

@@ -406,13 +406,18 @@ margin-top: 20px;
                     <p class="mb-2 text-success" id="couponDiscount">00</p>
                   </div>
                   <div class="d-flex justify-content-between">
+                    <p class="mb-2">Tax (5%):</p>
+                    <p class="mb-2">₹<%= tax.toFixed(2) %></p>
+                  </div>
+                  <div class="d-flex justify-content-between">
                     <p class="mb-2">Delivery Charges:</p>
-                    <p class="mb-2 text-success" id="couponDiscount">50</p>
+                    <p class="mb-2 text-success" id="charges">50</p>
                   </div>
                   <hr />
                   <div class="d-flex justify-content-between">
                     <p class="mb-2">Net Amount:</p>
-                    <p class="mb-2 fw-bold" id="couponTotal">₹<%= cart ? (cart.total_price + charges).toFixed(2) : '0.00' %></p>
+                    <!-- <p class="mb-2 fw-bold" id="couponTotal">₹<%= cart ? (cart.total_price + charges).toFixed(2) : '0.00' %></p> -->
+                    <p class="mb-2 fw-bold" id="couponTotal">₹<%= (cart.total_price + charges + tax).toFixed(2) %></p>
                   </div>
               </div>
             </div>
@@ -683,14 +688,14 @@ margin-top: 20px;
     });
     return;
 }
-if (zipCode.length < 6 || /\s/.test(zipCode)) {
-      Swal.fire({
-        title:'Error',
-        text:"Zipcode must be at least 6 characters and contain no spaces",
-        icon:"error"
-      });
-      return;
-    }
+if (zipCode.length !== 6 || /\s/.test(zipCode)) {
+  Swal.fire({
+    title: 'Error',
+    text: "Zipcode must be exactly 6 characters and contain no spaces",
+    icon: "error"
+  });
+  return;
+}
     try {
       const response=await fetch('/addAddress',{
       method:'POST',
@@ -733,6 +738,7 @@ if (zipCode.length < 6 || /\s/.test(zipCode)) {
     const couponCode = document.getElementById('couponCode').value.trim();
     const addressId = document.getElementById('exampleFormControlSelect1').value.trim();
     const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').id.trim();
+   
 
     if (!addressId || !paymentMethod) {
         Swal.fire({
@@ -751,7 +757,7 @@ if (zipCode.length < 6 || /\s/.test(zipCode)) {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ addressId, paymentMethod, couponCode })
+                body: JSON.stringify({ addressId, paymentMethod, couponCode})
             });
 
             if (response.ok) {
@@ -1178,6 +1184,8 @@ razorpay.on('payment.failed', async function (response) {
     const couponCode = document.getElementById('couponCode').value;
     let originalTotal = parseFloat(document.getElementById('couponTotal').getAttribute('data-original-total'));
 
+    const charges = parseFloat(document.getElementById('charges').textContent || 0);
+    const tax = parseFloat(document.getElementById('cart-total').textContent.replace('₹', '') * 0.05);
     
     if (!originalTotal) {
         originalTotal = parseFloat(document.getElementById('couponTotal').textContent.replace('₹', ''));
@@ -1204,8 +1212,13 @@ razorpay.on('payment.failed', async function (response) {
                 <p>Discount Amount: ₹${data.discountAmount}</p>
                 <button onclick="removeCoupon()">Remove Coupon</button>
             `;
-            resultDiv2.innerHTML = `<p>₹${data.discountAmount}.00</p>`;
-            resultDiv3.innerHTML = `<p>₹${data.finalAmount}.00</p>`;
+            resultDiv2.innerHTML = `<p>₹${Math.floor(data.discountAmount)}.00</p>`;
+
+            const newNetAmount = Math.floor(finalAmount + charges + tax);
+
+            // resultDiv3.innerHTML = `<p>₹${data.finalAmount}.00</p>`;
+
+            resultDiv3.innerHTML = `₹${newNetAmount.toFixed(2)}`;
         } else {
             resultDiv.innerHTML = `<p class="text-danger">${data.message}</p>`;
         }

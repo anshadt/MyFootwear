@@ -352,13 +352,13 @@
                                 </td>
                                 <td class="text-center"><%= order.paymentMethod %></td>
                                 <td class="text-center"><%= order.paymentStatus %></td>
-                                <td class="text-center"><%= order.discountAmount %></td>
-                                <td class="text-center"><%= order.totalAmount %></td>
-                                <%= console.log(order.orderStatus) %>
+                                <td class="text-center"><%= Math.floor(order.discountAmount) %></td>
+                                <td class="text-center"><%= Math.floor(order.totalAmount) %></td>
+                                
                                 
                                 <td>
                                     <% if (order.orderStatus === 'Delivered') { %>
-                                        <%= console.log(order.orderStatus) %>
+                                        
                                           <button type="button" class="btn btn-warning" onclick="handleReturn('<%= order._id %>', this)" data-toggle="tooltip" data-placement="bottom" title="Return Order">Return</button> 
 
                                     <% } else if (order.orderStatus === 'Returned') { %>
