@@ -18,9 +18,90 @@ const load_CouponPage=async(req,res)=>{
 }
 
 
+// const add_Coupon = async (req, res) => {
+//     try {
+//         const { coupon_code, description, start_date, expiry_date, discount_percentage, min_amount, max_amount } = req.body;
+//         console.log(start_date);
+//         const existingCoupon = await Coupon.findOne({
+//             coupon_code: { $regex: new RegExp(`^${coupon_code}$`, "i") },
+//         });
+//         if (existingCoupon) {
+//             return res.json({ success: false, error: "Coupon with this code already exists." });
+//         }
+//         if (!coupon_code) {
+//             return res.json({ success: false, error: 'Coupon code is empty.' });
+//         }
+//         if (!discount_percentage || isNaN(discount_percentage)) {
+//             return res.json({ success: false, error: 'Discount must be a valid number.' });
+//         }
+//         if (discount_percentage == 0 || discount_percentage < 1 || discount_percentage > 100) {
+//             return res.json({ success: false, error: 'Discount must be between 1 and 100.' });
+//         }
+//         if (discount_percentage !== Math.floor(discount_percentage)) {
+//             return res.json({ success: false, error: 'Discount must be a whole number.' });
+//         }
+//         const currentDate = new Date();
+        
+
+       
+//         if (!start_date) {
+//             return res.json({ success: false, error: 'Start date is required.' });
+//         }
+//         console.log(currentDate)
+//         if (start_date < currentDate) {
+//             return res.json({ success: false, error: 'Start date is empty or cannot be in the past or future.' });
+//         }
+//         if (!expiry_date) {
+//             return res.json({ success: false, error: 'Expiry date is required.' });
+//         }
+
+//         if (expiry_date <= start_date) {
+//             return res.json({ success: false, error: 'Expiry date must be later than the start date.' });
+//         }
+//         if (!min_amount || isNaN(min_amount) || parseInt(min_amount) <= 0) {
+//             return res.json({ success: false, error: 'Minimum amount must be a valid number greater than zero.' });
+//         }
+//         if (!min_amount || isNaN(min_amount) || parseInt(min_amount) > parseInt(max_amount)) {
+//             return res.json({ success: false, error: 'Minimum amount must be a lesser than maximum amount.' });
+//         }
+//         if (!max_amount || isNaN(max_amount) || parseInt(max_amount) <= 0) {
+//             return res.json({ success: false, error: 'Maximum amount must be a valid number greater than zero.' });
+//         }
+//         if (!description) {
+//             return res.json({ success: false, error: 'Coupon description is empty.' });
+//         }
+
+//         const newCoupon = new Coupon({
+//             coupon_code:coupon_code,
+//             discount:discount_percentage,
+//             start_date:start_date,
+//             expiry_date:expiry_date,
+//             min_purchase_amount:min_amount,
+//             max_coupon_amount:max_amount,
+//             coupon_description:description
+//         });
+
+//         await newCoupon.save();
+
+//         return res.json({ success: true, message: 'Coupon successfully added.' });
+
+//     } catch (error) {
+//         console.error("Error while adding new coupon:", error);
+//         console.log(error)
+
+//         if (error.name === 'ValidationError') {
+//             return res.status(400).json({ success: false, error: error.message });
+//         }
+
+//         return res.status(500).json({ success: false, error: "Something went wrong while adding the coupon." });
+//     }
+// };
+
+
 const add_Coupon = async (req, res) => {
     try {
         const { coupon_code, description, start_date, expiry_date, discount_percentage, min_amount, max_amount } = req.body;
+
         const existingCoupon = await Coupon.findOne({
             coupon_code: { $regex: new RegExp(`^${coupon_code}$`, "i") },
         });
@@ -39,41 +120,54 @@ const add_Coupon = async (req, res) => {
         if (discount_percentage !== Math.floor(discount_percentage)) {
             return res.json({ success: false, error: 'Discount must be a whole number.' });
         }
+
         const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);  // Set time to midnight for today
+
+        // Convert start_date to a Date object if it's a string
+        const startDateObj = new Date(start_date);
+
         if (!start_date) {
             return res.json({ success: false, error: 'Start date is required.' });
         }
-        if (start_date != currentDate) {
-            return res.json({ success: false, error: 'Start date is empty or cannot be in the past or future.' });
+
+        if (startDateObj < currentDate) {
+            return res.json({ success: false, error: 'Start date cannot be in the past.' });
         }
+
         if (!expiry_date) {
             return res.json({ success: false, error: 'Expiry date is required.' });
         }
 
-        if (expiry_date <= start_date) {
+        const expiryDateObj = new Date(expiry_date);
+        if (expiryDateObj <= startDateObj) {
             return res.json({ success: false, error: 'Expiry date must be later than the start date.' });
         }
+
         if (!min_amount || isNaN(min_amount) || parseInt(min_amount) <= 0) {
             return res.json({ success: false, error: 'Minimum amount must be a valid number greater than zero.' });
         }
+
         if (!min_amount || isNaN(min_amount) || parseInt(min_amount) > parseInt(max_amount)) {
-            return res.json({ success: false, error: 'Minimum amount must be a lesser than maximum amount.' });
+            return res.json({ success: false, error: 'Minimum amount must be less than the maximum amount.' });
         }
+
         if (!max_amount || isNaN(max_amount) || parseInt(max_amount) <= 0) {
             return res.json({ success: false, error: 'Maximum amount must be a valid number greater than zero.' });
         }
+
         if (!description) {
             return res.json({ success: false, error: 'Coupon description is empty.' });
         }
 
         const newCoupon = new Coupon({
-            coupon_code:coupon_code,
-            discount:discount_percentage,
-            start_date:start_date,
-            expiry_date:expiry_date,
-            min_purchase_amount:min_amount,
-            max_coupon_amount:max_amount,
-            coupon_description:description
+            coupon_code: coupon_code,
+            discount: discount_percentage,
+            start_date: startDateObj,
+            expiry_date: expiryDateObj,
+            min_purchase_amount: min_amount,
+            max_coupon_amount: max_amount,
+            coupon_description: description
         });
 
         await newCoupon.save();
@@ -90,8 +184,6 @@ const add_Coupon = async (req, res) => {
         return res.status(500).json({ success: false, error: "Something went wrong while adding the coupon." });
     }
 };
-
-
 
 const edit_Coupon= async (req,res)=>{
     try {
